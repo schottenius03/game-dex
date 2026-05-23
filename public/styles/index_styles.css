@@ -64,7 +64,17 @@
 
 .card-content .rating {
     font-weight: bold;
-    color: #f1c40f; 
+    color: var(--text-main); 
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Generates a solid orange star icon before the text value */
+.card-content .rating::before {
+    content: "\2605";
+    color: var(--accent-orange);
+    font-size: 1.1rem;
 }
 
 .game-card:hover {

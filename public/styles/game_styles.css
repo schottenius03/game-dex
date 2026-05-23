@@ -1,0 +1,203 @@
+/* Layout container for game details */
+.game-detail-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    gap: 3rem;
+}
+
+/* Sidebar Column (Left) */
+.game-sidebar {
+    flex: 0 0 300px;
+}
+
+.game-cover img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-surface);
+    padding: 2rem;
+    display: block;
+}
+
+.game-meta {
+    margin-top: 1.5rem;
+    background-color: var(--bg-surface);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.game-meta p {
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.game-meta .rating-value {
+    color: var(--text-main);
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+/* Generates a solid orange star icon before the text value */
+.game-meta .rating-value::before {
+    content: "\2605";
+    color: var(--accent-orange);
+    font-size: 1.1rem;
+}
+
+/* Main Content Column (Right) */
+.game-main-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.game-title {
+    color: var(--text-main);
+    font-size: 2.5rem;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.game-description h2, 
+.reviews-section h2 {
+    color: var(--accent-orange);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.game-description p {
+    color: var(--text-muted);
+}
+
+/* Reviews */
+.review-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    margin-bottom: 2rem; 
+}
+
+.review-author {
+    font-weight: bold;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.review-rating {
+    color: var(--text-main);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+/* Generates a star icon before the static review rating value */
+.review-rating::before {
+    content: "\2605";
+    color: var(--accent-orange);
+}
+
+/* Review form */
+.add-review-box {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.add-review-box h3 {
+    color: var(--text-main);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* Formats inputs and textareas */
+.form-group input,
+.form-group textarea {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.8rem;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    width: 100%;
+}
+
+/* Formats the select dropdown box and positions the arrow customly */
+.form-group select {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.8rem;
+    padding-right: 2.5rem; 
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    width: 100%;
+    cursor: pointer;
+    
+    /* Hide default arrow and create new */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white'><path d='M1 3.5l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: calc(100% - 1rem) center; 
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+}
+
+/* Submit button */
+.btn-submit {
+    background-color: var(--accent-orange);
+    color: #121212;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background-color 0.2s ease, opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn-submit:hover {
+    filter: brightness(1.1);
+}
+
+.btn-submit:active {
+    transform: scale(0.96);
+}
