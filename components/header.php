@@ -6,6 +6,7 @@
     <title>GameDex</title>
     <link rel="icon" type="image/png" href="assets/game-controller.png">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/index_styles.css">
 </head>
 <body>
 
