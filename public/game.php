@@ -1,31 +1,35 @@
 <?php 
   // Include header
+  require_once '../models/GameModel.php';
+  
+  $id = $_GET['id'] ?? null; // Superglobal variable
+  $game = getGameById($id);
+
   include '../components/header.php'; 
 ?>
 
 <link rel="stylesheet" href="styles/game_styles.css">
 
 <section class="game-detail-container">
+    <?php if ($game): ?>
     
     <div class="game-sidebar">
         <div class="game-cover">
             <img src="assets/game-controller.png" alt="Game Cover">
         </div>
         <div class="game-meta">
-            <p><strong>Genre: </strong>woho</p>
-            <p><strong>Rating: </strong> <span class="rating-value">4.5</span></p>
+            <p><strong>Genre: </strong><?php echo $game['genre']; ?></p>
+            <p><strong>Rating: </strong> <span class="rating-value"><?php echo $game['rating']; ?></span></p>
         </div>
     </div>
 
     <div class="game-main-info">
-        <h1 class="game-title">Title</h1>
+        <h1 class="game-title"><?php echo $game['title']; ?></h1>
         
         <div class="game-description">
             <h2>About the Game</h2>
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-                exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                <?php echo $game['description']; ?>
             </p>
         </div>
 
@@ -60,9 +64,13 @@
                     <button type="submit" class="btn-submit">Submit review</button>
                 </form>
             </div>
-
         </div>
     </div>
+    
+    <?php else: ?>
+        <h1 class="game-title">Game not found!</h1>
+        <a href="index.php">Return to home</a>
+    <?php endif; ?>
 
 </section>
 
