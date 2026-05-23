@@ -1,9 +1,11 @@
 <?php 
   // Include header
-  include 'components/header.php'; 
+  include '../components/header.php'; 
 ?>
 
-<main class="container">
+<link rel="stylesheet" href="styles/index_styles.css">
+
+<section class="container">
     <h1 class="page-title">My Game Collection</h1>
     
     <div class="game-grid">
@@ -31,9 +33,9 @@
         </a>
 
     </div>
-</main>
+</section>
 
 <?php 
   // Include footer
-  include 'components/footer.php'; 
+  include '../components/footer.php'; 
 ?>

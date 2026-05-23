@@ -6,7 +6,6 @@
     <title>GameDex</title>
     <link rel="icon" type="image/png" href="assets/game-controller.png">
     <link rel="stylesheet" href="styles/main.css">
-    <link rel="stylesheet" href="styles/index_styles.css">
 </head>
 <body>
 
@@ -17,8 +16,8 @@
         </div>
         <nav class="nav-menu">
             <a href="index.php">Home</a>
-            <a href="#">Wishlist</a>
-            <a href="#">Account</a>
+            <a href="#wishlist">Wishlist</a>
+            <a href="#account">Account</a>
         </nav>
     </div>
 </header>
