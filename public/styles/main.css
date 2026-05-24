@@ -1,7 +1,7 @@
 :root {
     --bg-dark: #121212;     
     --bg-surface: #1e1e1e;    
-    --text-main: #ffffff;     
+    --text-main: #ffffff;    
     --text-muted: #aaaaaa;    
     --accent-color: #e0e0e0; 
     --accent-orange: #f1953a; 
@@ -15,11 +15,19 @@
     box-sizing: border-box;
 }
 
+/* Flexbox setup to push footer to the bottom of the viewport */
 body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     font-family: var(--font-family);
     line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; 
+}
+
+main {
+    flex: 1;
 }
 
 a {
@@ -27,7 +35,7 @@ a {
     text-decoration: none;
 }
 
-/* Header */
+/* Header section styling */
 .main-header {
     background-color: var(--bg-surface);
     border-bottom: 1px solid var(--border-color);
@@ -62,7 +70,7 @@ a {
     color: var(--accent-orange);
 }
 
-/* Logo */
+/* Logo styling */
 .logo {
     font-size: 1.5rem;
     font-weight: bold;
@@ -79,12 +87,11 @@ a {
     display: block;
 }
 
-/* Footer */
+/* Footer styling */
 .main-footer {
     text-align: center;
     padding: 2rem;
     color: var(--text-muted);
     font-size: 0.85rem;
     border-top: 1px solid var(--border-color);
-    margin-top: 4rem;
 }

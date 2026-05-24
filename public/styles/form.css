@@ -1,0 +1,76 @@
+/* Form styling */
+
+/* General container for forms, handles background, border, and radius */
+.form-box {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+/* Flexbox layout for vertical alignment of form elements */
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Label styling */
+.form-group label {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Styling for input, textarea and select fields */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.8rem;
+    border-radius: 4px;
+    width: 100%;
+}
+
+/* Remember be checkbox */
+.remember-group {
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    margin-left: 0.2rem;
+}
+
+.remember-group input[type="checkbox"] {
+    width: 16px; 
+    height: 16px; 
+    accent-color: var(--accent-orange); 
+    cursor: pointer;
+}
+
+.remember-group label {
+    margin: 0; 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+    cursor: pointer;
+}
+
+/* Submit button styling - centered horizontally */
+.btn-submit {
+    background-color: var(--accent-orange);
+    color: #121212;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: center; 
+}
+
+.btn-submit:hover {
+    filter: brightness(1.1);
+}
+
+p a:hover {
+    text-decoration: underline;
+}

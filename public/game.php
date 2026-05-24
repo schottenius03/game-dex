@@ -13,6 +13,7 @@
 ?>
 
 <link rel="stylesheet" href="styles/game_styles.css">
+<link rel="stylesheet" href="styles/form.css">
 
 <div class="back-nav">
     <a href="index.php" class="back-button">
@@ -93,7 +94,7 @@
             <p class="no-reviews-msg">No reviews have been posted for this game yet. Be the first to share your thoughts below!</p>
         <?php endif; ?>
 
-        <div class="add-review-box">
+        <div class="form-box">
             <form action="#review-left" method="POST" class="review-form">
                 <h3>Leave a review</h3>
                 

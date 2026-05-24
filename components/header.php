@@ -1,3 +1,12 @@
+<?php
+// Start session to track user login status
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Determine the URL for the Account link
+$accountUrl = isset($_SESSION['user_id']) ? 'profile.php' : 'login.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +15,7 @@
     <title>GameDex</title>
     <link rel="icon" type="image/png" href="assets/game-controller.png">
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/form.css">
 </head>
 <body>
 
@@ -17,7 +27,11 @@
         <nav class="nav-menu">
             <a href="index.php">Home</a>
             <a href="#wishlist">Wishlist</a>
-            <a href="#account">Account</a>
+            <a href="<?php echo $accountUrl; ?>">Account</a>
+            
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <a href="logout.php">Logout</a>
+            <?php endif; ?>
         </nav>
     </div>
 </header>
