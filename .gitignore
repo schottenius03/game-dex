@@ -1,0 +1,24 @@
+# --- System files ---
+.DS_Store
+Thumbs.db
+
+# --- Development environment & dependencies ---
+node_modules/
+vendor/
+
+# --- Editor and IDE settings ---
+.vscode/
+.idea/
+
+# --- Extension and build files ---
+/hack/
+.hack/
+
+# --- Database and Configuration ---
+.env
+*.log
+config/database.php
+
+# --- XAMPP / Local development ---
+temp/
+tmp/

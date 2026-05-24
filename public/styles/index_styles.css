@@ -22,6 +22,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 2rem;
+    align-items: stretch;
 }
 
 /* Game cards */
@@ -35,19 +36,32 @@
     display: flex;
     flex-direction: column;
     text-decoration: none; 
+    height: 100%;
+    position: relative; 
+}
+
+.card-image {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .card-image img {
     width: 100%;
-    height: 300px;
-    object-fit: cover;
+    height: 100%;
+    object-fit: cover; 
     display: block;
 }
 
 .card-content {
     padding: 1.5rem;
     color: var(--text-main);
-    flex-grow: 1;
+    display: flex; 
+    flex-direction: column;
+    flex-grow: 1; 
+    padding-bottom: 3rem; 
 }
 
 .card-content h3 {
@@ -60,6 +74,7 @@
     color: var(--text-muted); 
     font-size: 0.9rem;
     margin: 0 0 1rem 0;
+    flex-grow: 1; 
 }
 
 .card-content .rating {
@@ -68,9 +83,11 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
+    position: absolute; 
+    bottom: 1.5rem;
+    right: 1.5rem;
 }
 
-/* Generates a solid orange star icon before the text value */
 .card-content .rating::before {
     content: "\2605";
     color: var(--accent-orange);
