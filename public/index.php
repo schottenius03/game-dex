@@ -1,9 +1,7 @@
 <?php 
   require_once '../models/GameModel.php';
   
-  // Initialize the model class
   $gameModel = new GameModel();
-  // Fetch all games from the database
   $games = $gameModel->getAllGames(); 
   
   include '../components/header.php'; 
@@ -13,12 +11,37 @@
 
 <section class="container">
     
+    <div class="search-filter-section">
+        <form action="index.php" method="GET" class="search-form">
+            <div class="form-group" style="width: 100%;">
+                <input type="text" name="q" placeholder="Search games...">
+            </div>
+        </form>
+
+        <div class="filter-group">
+            <div class="dropdown">
+                <button class="dropbtn">Platform <span class="arrow">&#9663;</span></button>
+                <div class="dropdown-content">
+                    <a href="#">Placeholder</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <button class="dropbtn">Genre <span class="arrow">&#9663;</span></button>
+                <div class="dropdown-content">
+                    <a href="#">Placeholder</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <div class="game-grid">
         <?php foreach ($games as $game): ?>
         <a href="game.php?id=<?php echo htmlspecialchars($game['id']); ?>" class="game-card">
             <div class="card-image">
                 <img src="<?php echo htmlspecialchars($game['image_url'] ?? 'assets/game-controller.png'); ?>" 
-                    alt="<?php echo htmlspecialchars($game['title']); ?>">
+                     alt="<?php echo htmlspecialchars($game['title']); ?>">
             </div>
             <div class="card-content">
                 <h3><?php echo htmlspecialchars($game['title']); ?></h3>

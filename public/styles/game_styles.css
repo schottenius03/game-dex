@@ -1,15 +1,22 @@
-/* Layout container */
+/* Responsive container layout */
 .game-detail-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem 1rem;
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+    grid-template-columns: 1fr;
+    gap: 2rem;
     align-items: start;
 }
 
-/* Sidebar to fit picture */
+@media (min-width: 768px) {
+    .game-detail-container {
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+}
+
+/* Sidebar styling for cover image */
 .game-sidebar {
     width: 100%;
 }
@@ -23,26 +30,34 @@
     display: block;
 }
 
-/* Main Content Column */
+/* Main information column */
 .game-main-info {
     display: flex;
     flex-direction: column;
     gap: 2rem;
 }
 
-/* Title container */
+/* Header title and rating container */
 .title-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid var(--border-color);
     padding-bottom: 0.5rem;
+    flex-wrap: wrap; 
+    gap: 1rem;
 }
 
 .game-title {
     color: var(--text-main);
-    font-size: 2.5rem;
+    font-size: 2rem; 
     margin: 0;
+}
+
+@media (min-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+    }
 }
 
 .header-rating {
@@ -52,10 +67,16 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    margin-left: 1rem;
+    margin-left: 0;
 }
 
-/* About the game */
+.header-rating::before {
+    content: "\2605";
+    color: var(--accent-orange);
+    font-size: 1.5rem;
+}
+
+/* Description text styling */
 .game-description h2 {
     color: var(--accent-orange);
     font-size: 1.5rem;
@@ -67,16 +88,22 @@
     line-height: 1.6;
 }
 
-/* Meta box */
+/* Meta information grid */
 .game-meta-box {
     margin-top: 2rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--border-color);
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 1fr; 
     column-gap: 2rem;
     row-gap: 1rem;
     align-items: baseline;
+}
+
+@media (min-width: 600px) {
+    .game-meta-box {
+        grid-template-columns: auto 1fr;
+    }
 }
 
 .game-meta-box strong {
@@ -91,7 +118,7 @@
     color: var(--text-main);
 }
 
-/* Back navigation */
+/* Navigation button styling */
 .back-nav {
     max-width: 1200px;
     margin: 1rem auto;
@@ -113,12 +140,7 @@
     filter: brightness(0.7);
 }
 
-.back-button:hover .back-text {
-    text-decoration: underline;
-    text-underline-offset: 4px;
-}
-
-/* Reviews section */
+/* Reviews section layout */
 .full-width-reviews {
     max-width: 1200px;
     margin: 0 auto;
@@ -129,16 +151,6 @@
     color: var(--accent-orange);
     font-size: 1.5rem;
     margin-bottom: 1rem;
-}
-
-.no-reviews-msg {
-    color: var(--text-muted);
-    font-style: italic;
-    margin-bottom: 2rem;
-    padding: 1.5rem;
-    border: 1px dashed var(--border-color);
-    border-radius: 6px;
-    text-align: center;
 }
 
 .review-card {
@@ -155,8 +167,10 @@
     margin-bottom: 0.5rem;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap; 
 }
 
+/* Star icon for reviews */
 .review-rating::before {
     content: "\2605";
     color: var(--accent-orange);

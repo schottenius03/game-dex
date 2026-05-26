@@ -29,6 +29,16 @@ form {
     padding: 0.8rem;
     border-radius: 4px;
     width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus state for form inputs to match theme */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 5px rgba(211, 84, 0, 0.3);
 }
 
 /* Password wrapper positioning */
@@ -131,3 +141,90 @@ p a:hover {
 .btn-danger-action:hover { background: #c0392b; }
 .btn-cancel-action { background: #333; color: #ccc; }
 .btn-cancel-action:hover { background: #444; color: #fff; }
+
+/* Search and filter section styles */
+.search-filter-section {
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.search-form {
+    flex: 1;
+    margin: 0;
+}
+
+.search-form .form-group {
+    margin: 0;
+    width: 100%;
+}
+
+.search-form .form-group input {
+    height: 44px;
+    box-sizing: border-box;
+}
+
+.filter-group {
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    height: 44px;
+    padding: 0 1.2rem;
+    cursor: pointer;
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 4px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: border-color 0.2s;
+}
+
+.dropbtn:hover {
+    border-color: var(--accent-orange);
+}
+
+.arrow {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: var(--bg-surface);
+    min-width: 150px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    z-index: 10;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 0.8rem;
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+.dropdown-content a:hover {
+    background-color: var(--bg-dark);
+}

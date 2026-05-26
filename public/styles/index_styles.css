@@ -5,6 +5,12 @@
     padding: 0 2rem;
 }
 
+@media (max-width: 600px) {
+    .main-content {
+        padding: 0 1rem;
+    }
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -20,9 +26,24 @@
 /* Grid auto-resizeable */
 .game-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
     align-items: stretch;
+}
+
+/* Tablet: 2 columns */
+@media (min-width: 600px) {
+    .game-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+    }
+}
+
+/* Laptop/Desktop: 4 columns */
+@media (min-width: 1024px) {
+    .game-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 /* Game cards */
