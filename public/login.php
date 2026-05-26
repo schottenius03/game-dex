@@ -55,7 +55,7 @@
                 <p style="color: #2ecc71; font-weight: bold; margin-bottom: 1rem;">Account has been successfully deleted.</p>
             <?php endif; ?>
             
-            <form method="POST" class="review-form">
+            <form method="POST">
                 <div class="reviews-section">
                     <h2>Login</h2>
                 </div>
@@ -69,7 +69,7 @@
                     <label for="password">Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="password" name="password" required>
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', this)">&#128065;</button>
+                        <button type="button" class="toggle-password">&#128065;</button>
                     </div>
                 </div>
 
@@ -78,7 +78,7 @@
                     <label for="remember">Remember me</label>
                 </div>
 
-                <button type="submit" class="btn-submit">Sign in</button>
+                <button type="submit" id="submit-btn" class="btn-submit">Sign in</button>
             </form>
         </div>
 
@@ -87,20 +87,6 @@
         </p>
     </div>
 </main>
-
-<script>
-// Toggle visibility of password input
-function togglePasswordVisibility(fieldId, button) {
-    const passwordField = document.getElementById(fieldId);
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        button.classList.add('visible');
-    } else {
-        passwordField.type = 'password';
-        button.classList.remove('visible');
-    }
-}
-</script>
 
 <?php 
   // Include footer component

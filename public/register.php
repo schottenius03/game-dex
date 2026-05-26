@@ -1,10 +1,10 @@
 <?php
   // Include global session handling
   require_once __DIR__ . '/../includes/auth.php';
-  // Include the new UserModel class
+  // Include the user model for database operations
   require_once __DIR__ . '/../models/UserModel.php';
 
-  // Process registration form
+  // Process the registration form submission
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       $username = trim($_POST['username']);
       $email = trim($_POST['email']);
@@ -12,52 +12,44 @@
       $repeat_password = $_POST['repeat_password'];
       $currency = $_POST['currency'];
 
-      // Instantiate the UserModel
       $userModel = new UserModel();
 
-      // Validate email format using industry standard PHP filter
+      // Validate email format using built-in filter
       if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-          $error = "Please enter a valid email address (e.g., name@domain.com).";
-      }
-      
-      // Validate password strength (min 8 chars, at least one uppercase letter, at least one number)
+          $error = "Please enter a valid email address.";
+      } 
+      // Validate password security requirements
       elseif (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
           $error = "Password must be at least 8 characters long, contain at least one uppercase letter and one number.";
       } 
-      
-      // Validate password match
+      // Ensure passwords match
       elseif ($password !== $repeat_password) {
           $error = "Passwords do not match.";
       } 
-      
-      // Check if username or email is already taken using the model
+      // Check if username or email already exists in the database
       elseif ($userModel->isUserExisting($username, $email)) {
           $error = "Username or Email is already registered.";
       } 
-      
-      // Register the user if everything is OK using the model
+      // Proceed with user registration
       else {
-        if ($userModel->registerUser($username, $email, $password, $currency)) {
-            // Redirect to login page with a success flag in the URL
-            header("Location: login.php?registered=true");
-            exit;
-        } else {
-            $error = "Something went wrong. Please try again.";
-        }
+          if ($userModel->registerUser($username, $email, $password, $currency)) {
+              header("Location: login.php?registered=true");
+              exit;
+          } else {
+              $error = "Something went wrong. Please try again.";
+          }
       }
   }
 
-  // Include header component
   include '../components/header.php'; 
 ?>
 
 <main>
     <div style="max-width: 400px; margin: 3rem auto;">
-        
         <div class="form-box">
             <?php if(isset($error)) echo "<p style='color:red; margin-bottom: 1rem;'>$error</p>"; ?>
             
-            <form method="POST" class="review-form">
+            <form method="POST">
                 <div class="reviews-section">
                     <h2>Sign up</h2>
                 </div>
@@ -86,7 +78,7 @@
                     <label for="password">Password</label>
                     <div class="password-wrapper">
                         <input type="password" id="password" name="password" required>
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', this)">&#128065;</button>
+                        <button type="button" class="toggle-password">&#128065;</button>
                     </div>
                 </div>
 
@@ -94,7 +86,7 @@
                     <label for="repeat_password">Repeat password</label>
                     <div class="password-wrapper">
                         <input type="password" id="repeat_password" name="repeat_password" required>
-                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('repeat_password', this)">&#128065;</button>
+                        <button type="button" class="toggle-password">&#128065;</button>
                     </div>
                 </div>
 
@@ -108,20 +100,4 @@
     </div>
 </main>
 
-<script>
-function togglePasswordVisibility(fieldId, button) {
-    const passwordField = document.getElementById(fieldId);
-    if (passwordField.type === 'password') {
-        passwordField.type = 'text';
-        button.classList.add('visible');
-    } else {
-        passwordField.type = 'password';
-        button.classList.remove('visible');
-    }
-}
-</script>
-
-<?php 
-  // Include footer component
-  include '../components/footer.php'; 
-?>
+<?php include '../components/footer.php'; ?>

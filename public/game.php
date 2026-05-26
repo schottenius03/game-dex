@@ -95,7 +95,7 @@
         <?php endif; ?>
 
         <div class="form-box">
-            <form action="#review-left" method="POST" class="review-form">
+            <form action="#review-left" method="POST">
                 <h3>Leave a review</h3>
                 
                 <div class="form-group">
