@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../config/database.php';
 
 class GameModel {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct() {
         // Initialize the database connection via Singleton
@@ -132,9 +132,39 @@ class GameModel {
      * @return array
      */
     private function getGameReviews($game_id) {
-        $sql = "SELECT rating, body FROM reviews WHERE game_id = :id ORDER BY created_at DESC";
+        $sql = "SELECT r.rating, r.body, u.username 
+                FROM reviews r 
+                JOIN users u ON r.user_id = u.id 
+                WHERE r.game_id = :id 
+                ORDER BY r.created_at ASC";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $game_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * Insert a new review into the database
+     * @param int $game_id
+     * @param int $user_id
+     * @param int $rating
+     * @param string $body
+     * @return bool
+     */
+    public function addReview($game_id, $user_id, $rating, $body) {
+        try {
+            $sql = "INSERT INTO reviews (game_id, user_id, rating, body, created_at) 
+                    VALUES (:game_id, :user_id, :rating, :body, NOW())";
+            $stmt = $this->pdo->prepare($sql);
+            return $stmt->execute([
+                'game_id' => $game_id,
+                'user_id' => $user_id,
+                'rating'  => $rating,
+                'body'    => $body
+            ]);
+        } catch (PDOException $e) {
+            error_log("Error inserting review: " . $e->getMessage());
+            return false;
+        }
+    }
+
 }

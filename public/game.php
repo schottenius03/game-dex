@@ -1,14 +1,23 @@
 <?php 
   require_once '../models/GameModel.php';
+  require_once __DIR__ . '/../includes/auth.php';
   
-  // Initialize the model class
   $gameModel = new GameModel();
   
   $id = $_GET['id'] ?? null; 
-  // Fetch game by ID using the model instance
-  $game = $gameModel->getGameById($id);
 
-  // Include header
+  // Process review submission
+  if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SESSION['user_id'])) {
+      $rating = (int)$_POST['rating'];
+      $body = trim($_POST['review_text']);
+
+      if ($gameModel->addReview($id, $_SESSION['user_id'], $rating, $body)) {
+          header("Location: game.php?id=" . $id);
+          exit;
+      }
+  }
+
+  $game = $gameModel->getGameById($id);
   include '../components/header.php'; 
 ?>
 
@@ -85,37 +94,41 @@
             <?php foreach ($game['reviews'] as $review): ?>
                 <div class="review-card">
                     <p class="review-author">
-                        User <span class="review-rating"><?php echo htmlspecialchars($review['rating']); ?></span>
+                        <strong><?php echo htmlspecialchars($review['username']); ?></strong> 
+                        <span class="review-rating"><?php echo htmlspecialchars($review['rating']); ?></span>
                     </p>
                     <p><?php echo nl2br(htmlspecialchars($review['body'])); ?></p>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
-            <p class="no-reviews-msg">No reviews have been posted for this game yet. Be the first to share your thoughts below!</p>
-        <?php endif; ?>
+            <?php endif; ?>
 
         <div class="form-box">
-            <form action="#review-left" method="POST">
-                <h3>Leave a review</h3>
-                
-                <div class="form-group">
-                    <label for="rating">Rating</label>
-                    <select id="rating" name="rating" required>
-                        <option value="5">&#9733; 5 - Excellent</option>
-                        <option value="4">&#9733; 4 - Very Good</option>
-                        <option value="3">&#9733; 3 - Average</option>
-                        <option value="2">&#9733; 2 - Poor</option>
-                        <option value="1">&#9733; 1 - Terrible</option>
-                    </select>
-                </div>
+            <?php if (isset($_SESSION['user_id'])): ?>
+                <form action="game.php?id=<?php echo $id; ?>" method="POST">
+                    <h3>Leave a review</h3>
+                    
+                    <div class="form-group">
+                        <label for="rating">Rating</label>
+                        <select id="rating" name="rating" required>
+                            <option value="5">&#9733; 5 - Excellent</option>
+                            <option value="4">&#9733; 4 - Very Good</option>
+                            <option value="3">&#9733; 3 - Average</option>
+                            <option value="2">&#9733; 2 - Poor</option>
+                            <option value="1">&#9733; 1 - Terrible</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="review_text">Review</label>
-                    <textarea id="review_text" name="review_text" rows="4" required placeholder="What did you think of the game?"></textarea>
-                </div>
+                    <div class="form-group">
+                        <label for="review_text">Review</label>
+                        <textarea id="review_text" name="review_text" rows="4" required placeholder="What did you think of the game?"></textarea>
+                    </div>
 
-                <button type="submit" class="btn-submit">Submit review</button>
-            </form>
+                    <button type="submit" class="btn-submit">Submit review</button>
+                </form>
+            <?php else: ?>
+                <p>You must be <a href="login.php">logged in</a> to leave a review.</p>
+            <?php endif; ?>
         </div>
     </div>
 </section>
