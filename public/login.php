@@ -4,7 +4,6 @@
 
   // Process login form
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      // Vi lägger till en kontroll för checkboxen sen när vi bygger logiken imorgon
       $remember = isset($_POST['remember']); 
       
       if (loginUser($_POST['username'], $_POST['password'])) {
@@ -15,7 +14,7 @@
       }
   }
 
-  // Include header component (Ensure CSS is linked in header.php)
+  // Include header component
   include '../components/header.php'; 
 ?>
 
@@ -37,7 +36,10 @@
 
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', this)">&#128065;</button>
+                    </div>
                 </div>
 
                 <div class="remember-group">
@@ -54,6 +56,19 @@
         </p>
     </div>
 </main>
+
+<script>
+function togglePasswordVisibility(fieldId, button) {
+    const passwordField = document.getElementById(fieldId);
+    if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        button.classList.add('visible');
+    } else {
+        passwordField.type = 'password';
+        button.classList.remove('visible');
+    }
+}
+</script>
 
 <?php 
   // Include footer component

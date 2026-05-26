@@ -1,5 +1,3 @@
-/* Form styling */
-
 /* General container for forms, handles background, border, and radius */
 .form-box {
     background-color: var(--bg-surface);
@@ -33,6 +31,37 @@
     width: 100%;
 }
 
+/* Password wrapper positioning */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Toggle password eye button button */
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: var(--text-main);
+}
+
+.toggle-password.visible {
+    color: var(--accent-orange);
+}
+
 /* Remember be checkbox */
 .remember-group {
     display: flex; 
@@ -55,7 +84,7 @@
     cursor: pointer;
 }
 
-/* Submit button styling - centered horizontally */
+/* Submit button styling */
 .btn-submit {
     background-color: var(--accent-orange);
     color: #121212;
