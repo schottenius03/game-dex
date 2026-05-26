@@ -15,7 +15,7 @@
 
       // Attempt to log in using the model's method
       if ($userModel->loginUser($username, $password)) {
-          header("Location: index.php");
+          header("Location: profile.php");
           exit;
       } else {
           $error = "Invalid username or password.";
@@ -32,8 +32,12 @@
         <div class="form-box">
             <?php if(isset($error)) echo "<p style='color:red; margin-bottom: 1rem;'>$error</p>"; ?>
             
-            <?php if(isset($_GET['registered']) && $_GET['registered'] === 'true'): ?>
+            <?php if(isset($_GET['registered']) && $_GET['registered'] === 'true' && !isset($error)): ?>
                 <p style="color: #2ecc71; font-weight: bold; margin-bottom: 1rem;">Account created successfully!</p>
+            <?php endif; ?>
+
+            <?php if(isset($_GET['account_deleted']) && $_GET['account_deleted'] === 'true' && !isset($error)): ?>
+                <p style="color: #2ecc71; font-weight: bold; margin-bottom: 1rem;">Account has been successfully deleted.</p>
             <?php endif; ?>
             
             <form method="POST" class="review-form">

@@ -35,18 +35,20 @@ class UserModel {
      * @param string $username
      * @param string $email
      * @param string $password
+     * @param string $preferred_currency
      * @return bool
      */
-    public function registerUser($username, $email, $password) {
+    public function registerUser($username, $email, $password, $preferred_currency = 'EUR') {
         try {
             // Hash the password using PHP's secure password_hash
             $hash = password_hash($password, PASSWORD_DEFAULT);
             
-            $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password_hash) VALUES (:username, :email, :password_hash)");
+            $stmt = $this->pdo->prepare("INSERT INTO users (username, email, password_hash, preferred_currency) VALUES (:username, :email, :password_hash, :preferred_currency)");
             return $stmt->execute([
                 'username' => $username,
                 'email' => $email,
-                'password_hash' => $hash
+                'password_hash' => $hash,
+                'preferred_currency' => $preferred_currency
             ]);
         } catch (PDOException $e) {
             error_log("Error registering user: " . $e->getMessage());
@@ -79,6 +81,144 @@ class UserModel {
             return false;
         } catch (PDOException $e) {
             error_log("Error during login: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get single user data by ID
+     * @param int $userId
+     * @return array|bool
+     */
+    public function getUserData($userId) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT email, preferred_currency FROM users WHERE id = :id");
+            $stmt->execute(['id' => $userId]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error fetching user data: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get all available platforms
+     * @return array
+     */
+    public function getAllPlatforms() {
+        $stmt = $this->pdo->prepare("SELECT id, name FROM platforms ORDER BY name ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get all available genres
+     * @return array
+     */
+    public function getAllGenres() {
+        $stmt = $this->pdo->prepare("SELECT id, name FROM genres ORDER BY name ASC");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Get platform IDs chosen by a specific user
+     * @param int $userId
+     * @return array
+     */
+    public function getUserPlatforms($userId) {
+        $stmt = $this->pdo->prepare("SELECT platform_id FROM user_platforms WHERE user_id = :user_id");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Get genre IDs chosen by a specific user
+     * @param int $userId
+     * @return array
+     */
+    public function getUserGenres($userId) {
+        $stmt = $this->pdo->prepare("SELECT favorite_genre_id FROM user_preferences WHERE user_id = :user_id");
+        $stmt->execute(['user_id' => $userId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    /**
+     * Update user profile preferences and email using database transaction
+     * @param int $userId
+     * @param string $currency
+     * @param array $platformIds
+     * @param array $genreIds
+     * @param string|null $email
+     * @return bool
+     */
+    public function updateProfile($userId, $currency, $platformIds, $genreIds, $email = null) {
+        try {
+            // Start transaction to secure all related updates
+            $this->pdo->beginTransaction();
+
+            // Update user core account details depending on email provision
+            if ($email !== null) {
+                $stmt = $this->pdo->prepare("UPDATE users SET preferred_currency = :currency, email = :email WHERE id = :id");
+                $stmt->execute([
+                    'currency' => $currency,
+                    'email' => $email,
+                    'id' => $userId
+                ]);
+            } else {
+                $stmt = $this->pdo->prepare("UPDATE users SET preferred_currency = :currency WHERE id = :id");
+                $stmt->execute([
+                    'currency' => $currency,
+                    'id' => $userId
+                ]);
+            }
+
+            // Clear old platform associations for this user
+            $stmt = $this->pdo->prepare("DELETE FROM user_platforms WHERE user_id = :user_id");
+            $stmt->execute(['user_id' => $userId]);
+
+            // Insert newly selected platform preferences
+            if (!empty($platformIds)) {
+                $stmt = $this->pdo->prepare("INSERT INTO user_platforms (user_id, platform_id) VALUES (:user_id, :platform_id)");
+                foreach ($platformIds as $platformId) {
+                    $stmt->execute(['user_id' => $userId, 'platform_id' => $platformId]);
+                }
+            }
+
+            // Clear old genre preferences for this user
+            $stmt = $this->pdo->prepare("DELETE FROM user_preferences WHERE user_id = :user_id");
+            $stmt->execute(['user_id' => $userId]);
+
+            // Insert newly selected genre preferences
+            if (!empty($genreIds)) {
+                $stmt = $this->pdo->prepare("INSERT INTO user_preferences (user_id, favorite_genre_id) VALUES (:user_id, :favorite_genre_id)");
+                foreach ($genreIds as $genreId) {
+                    $stmt->execute(['user_id' => $userId, 'favorite_genre_id' => $genreId]);
+                }
+            }
+
+            // Commit transaction if all queries succeed
+            $this->pdo->commit();
+            return true;
+        } catch (PDOException $e) {
+            // Roll back database changes if any query fails
+            $this->pdo->rollBack();
+            error_log("Error updating profile preferences: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete user account from database (Foreign keys handle cascade deletions)
+     * @param int $userId
+     * @return bool
+     */
+    public function deleteUser($userId) {
+        try {
+            $stmt = $this->pdo->prepare("DELETE FROM users WHERE id = :id");
+            return $stmt->execute(['id' => $userId]);
+        } catch (PDOException $e) {
+            error_log("Error deleting user account: " . $e->getMessage());
             return false;
         }
     }

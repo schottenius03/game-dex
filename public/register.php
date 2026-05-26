@@ -10,6 +10,7 @@
       $email = trim($_POST['email']);
       $password = $_POST['password'];
       $repeat_password = $_POST['repeat_password'];
+      $currency = $_POST['currency'];
 
       // Instantiate the UserModel
       $userModel = new UserModel();
@@ -36,7 +37,7 @@
       
       // Register the user if everything is OK using the model
       else {
-        if ($userModel->registerUser($username, $email, $password)) {
+        if ($userModel->registerUser($username, $email, $password, $currency)) {
             // Redirect to login page with a success flag in the URL
             header("Location: login.php?registered=true");
             exit;
@@ -69,6 +70,16 @@
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="currency">Preferred Currency</label>
+                    <select id="currency" name="currency" style="width: 100%; padding: 10px; background: #1e1e24; color: #fff; border: 1px solid #333; border-radius: 4px;" required>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="SEK">SEK (kr)</option>
+                        <option value="AUD">AUD ($)</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
