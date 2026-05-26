@@ -1,104 +1,107 @@
-document.addEventListener('DOMContentLoaded', () => {
+$(document).ready(function() {
 
     // Toggle password visibility
-    const passwordToggles = document.querySelectorAll('.toggle-password');
-    passwordToggles.forEach(button => {
-        button.addEventListener('click', function() {
-            const inputField = this.parentElement.querySelector('input');
-            inputField.type = inputField.type === 'password' ? 'text' : 'password';
-            this.classList.toggle('visible');
-        });
+    $('.toggle-password').on('click', function() {
+        const inputField = $(this).siblings('input');
+        const type = inputField.attr('type') === 'password' ? 'text' : 'password';
+        inputField.attr('type', type);
+        $(this).toggleClass('visible');
     });
 
     // Form loading animation
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', function() {
-            const btn = this.querySelector('.btn-submit');
-            if (btn) {
-                btn.disabled = true;
-                let dots = 0;
-                setInterval(() => {
-                    dots = (dots % 3) + 1;
-                    btn.textContent = 'Loading' + '.'.repeat(dots);
-                }, 500);
-            }
-        });
+    $('form').on('submit', function() {
+        const btn = $(this).find('.btn-submit');
+        if (btn.length) {
+            btn.text('Saving...');
+            btn.css('opacity', '0.7');
+        }
     });
 
     // Profile form change detection
-    const profileForm = document.getElementById('profileForm');
-    if (profileForm) {
-        const saveBtn = document.getElementById('saveBtn');
+    const $profileForm = $('#profileForm');
+    if ($profileForm.length) {
+        const $saveBtn = $('#saveBtn');
 
         function getFormState() {
             const state = {};
-            const inputs = profileForm.querySelectorAll('input[type="checkbox"], select, input[type="email"]');
-            inputs.forEach(input => {
-                if (input.type === 'checkbox') {
-                    state[input.name + '_' + input.value] = input.checked;
-                } else {
-                    state[input.name] = input.value;
+            // Use a unique identifier by combining name and value
+            $profileForm.find('input, select').each(function() {
+                const $input = $(this);
+                const type = $input.attr('type');
+                const name = $input.attr('name');
+                const val = $input.val();
+
+                if (type === 'checkbox') {
+                    // For arrays using name + value as key
+                    state[name + '_' + val] = $input.is(':checked');
+                } else if (type !== 'submit' && type !== 'hidden') {
+                    // For text/select/email, save the current value
+                    state[name] = val;
                 }
             });
             return JSON.stringify(state);
         }
 
+        // Store the original state on page load
         const initialState = getFormState();
 
-        profileForm.addEventListener('input', function() {
+        // Monitor input changes to enable/disable save button
+        $profileForm.on('input change', function() {
             if (getFormState() !== initialState) {
-                saveBtn.disabled = false;
-                saveBtn.style.backgroundColor = '#e7783c';
-                saveBtn.style.color = '#ffffff';
-                saveBtn.style.border = '1px solid #e7783c';
-                saveBtn.style.cursor = 'pointer';
+                $saveBtn.prop('disabled', false).css({
+                    'background-color': '#e7783c',
+                    'color': '#ffffff',
+                    'border': '1px solid #e7783c',
+                    'cursor': 'pointer'
+                });
             } else {
-                saveBtn.disabled = true;
-                saveBtn.style.backgroundColor = '#2c2c35';
-                saveBtn.style.color = 'rgba(255,255,255,0.4)';
-                saveBtn.style.border = '1px solid #444';
-                saveBtn.style.cursor = 'not-allowed';
+                $saveBtn.prop('disabled', true).css({
+                    'background-color': '#2c2c35',
+                    'color': 'rgba(255,255,255,0.4)',
+                    'border': '1px solid #444',
+                    'cursor': 'not-allowed'
+                });
             }
         });
     }
 
     // Delete account modal logic using event delegation
-    const deleteTriggerBtn = document.getElementById('deleteTriggerBtn');
-    if (deleteTriggerBtn) {
-        const modalOverlay = document.getElementById('deleteModalOverlay');
-        const modalTitle = document.getElementById('modalTitle');
-        const btnContainer = document.getElementById('modalBtnContainer');
-        const hiddenDeleteForm = document.getElementById('hiddenDeleteForm');
+    const $deleteTriggerBtn = $('#deleteTriggerBtn');
+    if ($deleteTriggerBtn.length) {
+        const $modalOverlay = $('#deleteModalOverlay');
+        const $modalTitle = $('#modalTitle');
+        const $btnContainer = $('#modalBtnContainer');
+        const $hiddenDeleteForm = $('#hiddenDeleteForm');
 
-        const closeModal = () => modalOverlay.style.display = 'none';
+        const closeModal = () => $modalOverlay.hide();
 
         // Handles button clicks within the modal via delegation
-        btnContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('btn-cancel-action')) {
+        $btnContainer.on('click', (e) => {
+            const $target = $(e.target);
+            if ($target.hasClass('btn-cancel-action')) {
                 closeModal();
-            } else if (e.target.id === 'modalDeleteBtn') {
-                modalTitle.innerText = "Are you REALLY sure?";
-                btnContainer.innerHTML = `
+            } else if ($target.attr('id') === 'modalDeleteBtn') {
+                $modalTitle.text("Are you REALLY sure?");
+                $btnContainer.html(`
                     <button type="button" class="modal-btn btn-danger-action" id="confirmDelete">Delete</button>
                     <button type="button" class="modal-btn btn-cancel-action">Cancel</button>
-                `;
-            } else if (e.target.id === 'confirmDelete') {
-                hiddenDeleteForm.submit();
+                `);
+            } else if ($target.attr('id') === 'confirmDelete') {
+                $hiddenDeleteForm.submit();
             }
         });
 
-        deleteTriggerBtn.addEventListener('click', () => {
-            modalTitle.innerText = "Are you sure you want to delete your account?";
-            btnContainer.innerHTML = `
+        $deleteTriggerBtn.on('click', () => {
+            $modalTitle.text("Are you sure you want to delete your account?");
+            $btnContainer.html(`
                 <button type="button" class="modal-btn btn-cancel-action">Cancel</button>
                 <button type="button" class="modal-btn btn-danger-action" id="modalDeleteBtn">Delete</button>
-            `;
-            modalOverlay.style.display = 'flex';
+            `);
+            $modalOverlay.css('display', 'flex');
         });
 
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) closeModal();
+        $modalOverlay.on('click', (e) => {
+            if (e.target === $modalOverlay[0]) closeModal();
         });
     }
 });

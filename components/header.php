@@ -16,6 +16,7 @@ $accountUrl = isset($_SESSION['user_id']) ? 'profile.php' : 'login.php';
     <link rel="icon" type="image/png" href="assets/game-controller.png">
     <link rel="stylesheet" href="styles/main.css">
     <link rel="stylesheet" href="styles/form.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
 

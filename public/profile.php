@@ -22,7 +22,7 @@
   $userGenres = $userModel->getUserGenres($userId);
 
   // Handle Profile Update Request
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['delete_account'])) {
       $currency = $_POST['currency'];
       $email = !empty($_POST['email']) ? trim($_POST['email']) : $userData['email'];
       $selectedPlatforms = isset($_POST['platforms']) ? $_POST['platforms'] : [];
@@ -81,7 +81,7 @@
 
                     <div class="form-group" style="margin: 0;">
                         <label for="email" style="display:block; margin-bottom:0.5rem; font-weight:bold; font-size: 0.95rem;">Email</label>
-                        <input type="email" id="email" name="email" 
+                        <input type="email" id="email" name="email" autocomplete="email"
                                value="<?php echo htmlspecialchars($userData['email'] ?? ''); ?>" 
                                style="width:100%; padding:0.8rem; background:#1e1e24; color:#fff; border:1px solid #333; border-radius:4px; transition: border-color 0.2s;"
                                onfocus="this.select(); this.style.borderColor='#e7783c';" onblur="this.style.borderColor='#333'">
@@ -99,12 +99,15 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 2.5rem;">
-                    <label style="display:block; margin-bottom:0.8rem; font-weight:bold; font-size: 0.95rem;">Your Platforms</label>
+                    <span style="display:block; margin-bottom:0.8rem; font-weight:bold; font-size: 0.95rem;">Your Platforms</span>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem;">
                         <?php foreach ($allPlatforms as $platform): ?>
-                            <?php $isPlatformChecked = in_array($platform['id'], $userPlatforms); ?>
-                            <label style="display: inline-flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.95rem; user-select: none; color: #fff;">
-                                <input type="checkbox" name="platforms[]" value="<?php echo $platform['id']; ?>"
+                            <?php 
+                                $isPlatformChecked = in_array($platform['id'], $userPlatforms); 
+                                $checkboxId = "platform_" . $platform['id']; // Skapa unikt ID
+                            ?>
+                            <label for="<?php echo $checkboxId; ?>">
+                                <input type="checkbox" id="<?php echo $checkboxId; ?>" name="platforms[]" value="<?php echo $platform['id']; ?>"
                                     <?php echo $isPlatformChecked ? 'checked' : ''; ?>
                                     style="accent-color: #e7783c; margin: 0; width: 16px; height: 16px;">
                                 <?php echo htmlspecialchars($platform['name']); ?>
@@ -114,12 +117,15 @@
                 </div>
 
                 <div class="form-group" style="margin-bottom: 3rem;">
-                    <label style="display:block; margin-bottom:0.8rem; font-weight:bold; font-size: 0.95rem;">Favorite Genres</label>
+                    <span style="display:block; margin-bottom:0.8rem; font-weight:bold; font-size: 0.95rem;">Favorite Genres</span>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem;">
                         <?php foreach ($allGenres as $genre): ?>
-                            <?php $isGenreChecked = in_array($genre['id'], $userGenres); ?>
-                            <label style="display: inline-flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.95rem; user-select: none; color: #fff;">
-                                <input type="checkbox" name="genres[]" value="<?php echo $genre['id']; ?>"
+                            <?php 
+                                $isGenreChecked = in_array($genre['id'], $userGenres); 
+                                $genreId = "genre_" . $genre['id']; // Generates a unique ID like "genre_1"
+                            ?>
+                            <label for="<?php echo $genreId; ?>" style="display: inline-flex; align-items: center; gap: 0.6rem; cursor: pointer; font-size: 0.95rem; user-select: none; color: #fff;">
+                                <input type="checkbox" id="<?php echo $genreId; ?>" name="genres[]" value="<?php echo $genre['id']; ?>"
                                     <?php echo $isGenreChecked ? 'checked' : ''; ?>
                                     style="accent-color: #e7783c; margin: 0; width: 16px; height: 16px;">
                                 <?php echo htmlspecialchars($genre['name']); ?>

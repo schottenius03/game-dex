@@ -56,12 +56,12 @@
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" autocomplete="username" required>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" autocomplete="email" required>
                 </div>
 
                 <div class="form-group">
@@ -77,7 +77,7 @@
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" autocomplete="new-password" required>
                         <button type="button" class="toggle-password">&#128065;</button>
                     </div>
                 </div>
@@ -85,14 +85,13 @@
                 <div class="form-group">
                     <label for="repeat_password">Repeat password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="repeat_password" name="repeat_password" required>
+                        <input type="password" id="repeat_password" name="repeat_password" autocomplete="new-password" required>
                         <button type="button" class="toggle-password">&#128065;</button>
                     </div>
                 </div>
 
                 <button type="submit" class="btn-submit">Sign up</button>
             </form>
-        </div>
 
         <p style="margin-top: 1.5rem; color: var(--text-muted); text-align: center;">
             Already have an account? <a href="login.php" style="color: var(--accent-orange);">Login here</a>

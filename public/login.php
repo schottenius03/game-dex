@@ -62,13 +62,13 @@
 
                 <div class="form-group">
                     <label for="username">Username</label>
-                    <input type="text" id="username" name="username" required>
+                    <input type="text" id="username" name="username" autocomplete="username" required>
                 </div>
 
                 <div class="form-group">
                     <label for="password">Password</label>
                     <div class="password-wrapper">
-                        <input type="password" id="password" name="password" required>
+                        <input type="password" id="password" name="password" autocomplete="current-password" required>
                         <button type="button" class="toggle-password">&#128065;</button>
                     </div>
                 </div>
@@ -80,7 +80,6 @@
 
                 <button type="submit" id="submit-btn" class="btn-submit">Sign in</button>
             </form>
-        </div>
 
         <p style="margin-top: 1.5rem; color: var(--text-muted); text-align: center;">
             Don't have an account? <a href="register.php" style="color: var(--accent-orange);">Register here</a>
