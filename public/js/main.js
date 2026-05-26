@@ -1,18 +1,28 @@
 $(document).ready(function() {
 
-    // Fetch games via AJAX based on search input
-    function fetchGames(query = '') {
+    // Global state for filters
+    let currentQuery = '';
+    let currentPlatformId = null;
+    let currentGenreId = null;
+
+    // Fetch games via AJAX based on search input and filters
+    function fetchGames() {
         $.ajax({
             url: '/GameDex/public/search.php',
             method: 'GET',
             dataType: 'json',
-            data: { q: query },
+            data: { 
+                q: currentQuery,
+                platform_id: currentPlatformId,
+                genre_id: currentGenreId
+            },
             success: function(data) {
                 const $grid = $('#gameGrid');
                 let html = '';
 
                 if (data.length === 0) {
-                    $grid.html('<p>No games found matching your search.</p>');
+                    // Display no results message
+                    $grid.html('<p class="no-results-text">No games found matching your criteria.</p>');
                     return;
                 }
 
@@ -36,8 +46,31 @@ $(document).ready(function() {
 
     // Trigger search on input
     $('#searchBar').on('input', function() {
-        fetchGames($(this).val());
+        currentQuery = $(this).val();
+        fetchGames();
     });
+
+    // Handle platform filter click
+    $('.platform-filter').on('click', function(e) {
+        e.preventDefault();
+        currentPlatformId = $(this).data('id');
+        
+        // Update button text to show selected platform
+        $('.dropbtn').first().html($(this).text() + ' <span class="arrow">&#9663;</span>');
+        
+        fetchGames();
+    });
+
+    // Handle genre filter click
+        $('.genre-filter').on('click', function(e) {
+            e.preventDefault();
+            currentGenreId = $(this).data('id');
+            
+            // Update genre button text to show selected genre
+            $(this).closest('.dropdown').find('.dropbtn').html($(this).text() + ' <span class="arrow">&#9663;</span>');
+            
+            fetchGames();
+        });
 
     // Toggle password visibility
     $('.toggle-password').on('click', function() {
@@ -63,7 +96,6 @@ $(document).ready(function() {
 
         function getFormState() {
             const state = {};
-            // Use a unique identifier by combining name and value
             $profileForm.find('input, select').each(function() {
                 const $input = $(this);
                 const type = $input.attr('type');
@@ -71,20 +103,16 @@ $(document).ready(function() {
                 const val = $input.val();
 
                 if (type === 'checkbox') {
-                    // For arrays using name + value as key
                     state[name + '_' + val] = $input.is(':checked');
                 } else if (type !== 'submit' && type !== 'hidden') {
-                    // For text/select/email, save the current value
                     state[name] = val;
                 }
             });
             return JSON.stringify(state);
         }
 
-        // Store the original state on page load
         const initialState = getFormState();
 
-        // Monitor input changes to enable/disable save button
         $profileForm.on('input change', function() {
             if (getFormState() !== initialState) {
                 $saveBtn.prop('disabled', false).css({
@@ -104,7 +132,7 @@ $(document).ready(function() {
         });
     }
 
-    // Delete account modal logic using event delegation
+    // Delete account modal logic
     const $deleteTriggerBtn = $('#deleteTriggerBtn');
     if ($deleteTriggerBtn.length) {
         const $modalOverlay = $('#deleteModalOverlay');
@@ -114,7 +142,6 @@ $(document).ready(function() {
 
         const closeModal = () => $modalOverlay.hide();
 
-        // Handles button clicks within the modal via delegation
         $btnContainer.on('click', (e) => {
             const $target = $(e.target);
             if ($target.hasClass('btn-cancel-action')) {

@@ -11,33 +11,6 @@ class GameModel {
     }
 
     /**
-     * Search games by title
-     * @param string $query
-     * @return array
-     */
-    public function searchGames($query) {
-        try {
-            // Search games where title matches query
-            $sql = "SELECT * FROM games WHERE title LIKE :query";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute(['query' => '%' . $query . '%']);
-            $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            // Enrich each game with metadata
-            foreach ($games as &$game) {
-                $game['genres'] = $this->getGameGenres($game['id']);
-                $game['platforms'] = $this->getGamePlatforms($game['id']);
-                $game['rating_data'] = $this->getGameRating($game['id']);
-                $game['image_url'] = $this->getGameImage($game['id']);
-            }
-            return $games;
-        } catch (PDOException $e) {
-            error_log("Error searching games: " . $e->getMessage());
-            return [];
-        }
-    }
-
-    /**
      * Fetch all games from the database
      * @return array
      */
@@ -50,6 +23,7 @@ class GameModel {
             foreach ($games as &$game) {
                 $game['genres'] = $this->getGameGenres($game['id']);
                 $game['platforms'] = $this->getGamePlatforms($game['id']);
+                // Now returns array with 'avg' and 'count'
                 $game['rating_data'] = $this->getGameRating($game['id']);
                 $game['image_url'] = $this->getGameImage($game['id']);
             }
@@ -73,8 +47,10 @@ class GameModel {
             $game = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($game) {
+                // Enrich the game with genres, ratings and the cover image
                 $game['genres'] = $this->getGameGenres($game['id']);
                 $game['platforms'] = $this->getGamePlatforms($game['id']);
+                // Now returns array with 'avg' and 'count'
                 $game['rating_data'] = $this->getGameRating($game['id']);
                 $game['image_url'] = $this->getGameImage($game['id']);
                 $game['reviews'] = $this->getGameReviews($game['id']);
@@ -189,5 +165,23 @@ class GameModel {
             error_log("Error inserting review: " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Fetch all platforms from the database
+     * @return array
+     */
+    public function getAllPlatforms() {
+        $stmt = $this->pdo->query("SELECT * FROM platforms ORDER BY name ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Fetch all genres from the database
+     * @return array
+     */
+    public function getAllGenres() {
+        $stmt = $this->pdo->query("SELECT * FROM genres ORDER BY name ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

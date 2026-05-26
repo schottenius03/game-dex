@@ -142,6 +142,150 @@ p a:hover {
 .btn-cancel-action { background: #333; color: #ccc; }
 .btn-cancel-action:hover { background: #444; color: #fff; }
 
+/* General container for forms, handles background, border, and radius */
+.form-box {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+}
+
+/* Flexbox layout for vertical alignment of form elements */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+/* Label styling */
+.form-group label {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+/* Styling for input, textarea and select fields */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    background-color: var(--bg-dark);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.8rem;
+    border-radius: 4px;
+    width: 100%;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* Focus state for form inputs to match theme */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 5px rgba(211, 84, 0, 0.3);
+}
+
+/* Password wrapper positioning */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Toggle password visibility button */
+.toggle-password {
+    position: absolute;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+    color: var(--text-main);
+}
+
+.toggle-password.visible {
+    color: var(--accent-orange);
+}
+
+/* Remember me checkbox container */
+.remember-group {
+    display: flex; 
+    align-items: center; 
+    gap: 0.5rem; 
+    margin-left: 0.2rem;
+}
+
+.remember-group input[type="checkbox"] {
+    width: 16px; 
+    height: 16px; 
+    accent-color: var(--accent-orange); 
+    cursor: pointer;
+}
+
+.remember-group label {
+    margin: 0; 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+    cursor: pointer;
+}
+
+/* Submit button styling */
+.btn-submit {
+    background-color: var(--accent-orange);
+    color: #121212;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    align-self: center; 
+}
+
+.btn-submit:hover {
+    filter: brightness(1.1);
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+/* Custom Modal Styles */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none; justify-content: center; align-items: center;
+    z-index: 9999; backdrop-filter: blur(4px);
+}
+.custom-modal {
+    background: #1e1e24;
+    border: 1px solid #333;
+    padding: 2.5rem;
+    border-radius: 8px;
+    max-width: 450px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+.custom-modal h3 { margin-bottom: 1.5rem; color: #fff; font-size: 1.3rem; }
+.modal-btn-container { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; }
+.modal-btn {
+    padding: 0.8rem 1.5rem; border-radius: 4px; font-weight: bold; cursor: pointer; border: none; flex: 1; transition: background 0.2s;
+}
+.btn-danger-action { background: #e74c3c; color: #fff; }
+.btn-danger-action:hover { background: #c0392b; }
+.btn-cancel-action { background: #333; color: #ccc; }
+.btn-cancel-action:hover { background: #444; color: #fff; }
+
 /* Search and filter section styles */
 .search-filter-section {
     margin-bottom: 2rem;
@@ -151,26 +295,11 @@ p a:hover {
     width: 100%;
 }
 
-.search-form {
-    flex: 1;
-    margin: 0;
-}
+.search-form { flex: 1; margin: 0; }
+.search-form .form-group { margin: 0; width: 100%; }
+.search-form .form-group input { height: 44px; box-sizing: border-box; }
 
-.search-form .form-group {
-    margin: 0;
-    width: 100%;
-}
-
-.search-form .form-group input {
-    height: 44px;
-    box-sizing: border-box;
-}
-
-.filter-group {
-    display: flex;
-    gap: 1rem;
-    flex-shrink: 0;
-}
+.filter-group { display: flex; gap: 1rem; flex-shrink: 0; }
 
 .dropdown {
     position: relative;
@@ -192,37 +321,46 @@ p a:hover {
     transition: border-color 0.2s;
 }
 
-.dropbtn:hover {
-    border-color: var(--accent-orange);
-}
+.dropbtn:hover { border-color: var(--accent-orange); }
 
-.arrow {
-    font-size: 1rem;
-    line-height: 1;
-}
-
+/* Dropdown menu container */
 .dropdown-content {
     display: none;
     position: absolute;
     right: 0;
+    top: 100%;
     background-color: var(--bg-surface);
     min-width: 150px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    z-index: 10;
+    z-index: 1000;
     border: 1px solid var(--border-color);
     border-radius: 4px;
-    margin-top: 5px;
+    margin-top: 8px;
+    padding: 5px 0;
 }
 
+/* Invisible bridge to prevent hover from breaking */
+.dropdown::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: transparent;
+}
+
+/* Show menu on hover */
 .dropdown:hover .dropdown-content {
     display: block;
 }
 
 .dropdown-content a {
     display: block;
-    padding: 0.8rem;
+    padding: 0.8rem 1rem;
     text-decoration: none;
     color: var(--text-main);
+    transition: background 0.2s;
 }
 
 .dropdown-content a:hover {

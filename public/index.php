@@ -3,7 +3,8 @@
   
   $gameModel = new GameModel();
   $games = $gameModel->getAllGames(); 
-  
+  $platforms = $gameModel->getAllPlatforms();
+  $genres = $gameModel->getAllGenres();
   include '../components/header.php'; 
 ?>
 
@@ -19,19 +20,34 @@
         </form>
 
         <div class="filter-group">
-            <div class="dropdown">
-                <button class="dropbtn">Platform <span class="arrow">&#9663;</span></button>
-                <div class="dropdown-content">
-                    <a href="#">Placeholder</a>
+
+            <div class="filter-group">
+                <div class="dropdown">
+                    <button class="dropbtn">Platform <span class="arrow">&#9663;</span></button>
+                    <div class="dropdown-content">
+                        <a href="#" class="platform-filter" data-id="">All Platforms</a>
+                        
+                        <?php foreach ($platforms as $platform): ?>
+                            <a href="#" class="platform-filter" data-id="<?php echo htmlspecialchars($platform['id']); ?>">
+                                <?php echo htmlspecialchars($platform['name']); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
             </div>
 
             <div class="dropdown">
                 <button class="dropbtn">Genre <span class="arrow">&#9663;</span></button>
                 <div class="dropdown-content">
-                    <a href="#">Placeholder</a>
+                    <a href="#" class="genre-filter" data-id="">All Genres</a>
+                    <?php foreach ($genres as $genre): ?>
+                        <a href="#" class="genre-filter" data-id="<?php echo htmlspecialchars($genre['id']); ?>">
+                            <?php echo htmlspecialchars($genre['name']); ?>
+                        </a>
+                    <?php endforeach; ?>
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -47,6 +63,7 @@
                 <h3><?php echo htmlspecialchars($game['title']); ?></h3>
                 
                 <div class="card-meta">
+                    
                     <p class="platform">
                         <?php 
                         $platformNames = array_map(function($p) { return $p['name']; }, $game['platforms']);
