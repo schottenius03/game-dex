@@ -28,10 +28,6 @@ $accountUrl = isset($_SESSION['user_id']) ? 'profile.php' : 'login.php';
             <a href="index.php">Home</a>
             <a href="#wishlist">Wishlist</a>
             <a href="<?php echo $accountUrl; ?>">Account</a>
-            
-            <?php if (isset($_SESSION['user_id'])): ?>
-                <a href="logout.php">Logout</a>
-            <?php endif; ?>
         </nav>
     </div>
 </header>

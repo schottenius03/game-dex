@@ -1,12 +1,20 @@
 <?php
-  // Include authentication logic
+  // Include global session handling
   require_once __DIR__ . '/../includes/auth.php';
+  // Include the new UserModel class
+  require_once __DIR__ . '/../models/UserModel.php';
 
   // Process login form
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+      $username = trim($_POST['username']);
+      $password = $_POST['password'];
       $remember = isset($_POST['remember']); 
       
-      if (loginUser($_POST['username'], $_POST['password'])) {
+      // Instantiate the UserModel
+      $userModel = new UserModel();
+
+      // Attempt to log in using the model's method
+      if ($userModel->loginUser($username, $password)) {
           header("Location: index.php");
           exit;
       } else {
@@ -23,6 +31,10 @@
         
         <div class="form-box">
             <?php if(isset($error)) echo "<p style='color:red; margin-bottom: 1rem;'>$error</p>"; ?>
+            
+            <?php if(isset($_GET['registered']) && $_GET['registered'] === 'true'): ?>
+                <p style="color: #2ecc71; font-weight: bold; margin-bottom: 1rem;">Account created successfully!</p>
+            <?php endif; ?>
             
             <form method="POST" class="review-form">
                 <div class="reviews-section">

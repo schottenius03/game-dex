@@ -1,18 +1,52 @@
 <?php
-  // Include authentication logic
+  // Include global session handling
   require_once __DIR__ . '/../includes/auth.php';
+  // Include the new UserModel class
+  require_once __DIR__ . '/../models/UserModel.php';
 
-  // Process login form
+  // Process registration form
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      if (loginUser($_POST['username'], $_POST['password'])) {
-          header("Location: index.php");
-          exit;
-      } else {
-          $error = "Invalid username or password.";
+      $username = trim($_POST['username']);
+      $email = trim($_POST['email']);
+      $password = $_POST['password'];
+      $repeat_password = $_POST['repeat_password'];
+
+      // Instantiate the UserModel
+      $userModel = new UserModel();
+
+      // Validate email format using industry standard PHP filter
+      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+          $error = "Please enter a valid email address (e.g., name@domain.com).";
+      }
+      
+      // Validate password strength (min 8 chars, at least one uppercase letter, at least one number)
+      elseif (!preg_match('/^(?=.*[A-Z])(?=.*\d).{8,}$/', $password)) {
+          $error = "Password must be at least 8 characters long, contain at least one uppercase letter and one number.";
+      } 
+      
+      // Validate password match
+      elseif ($password !== $repeat_password) {
+          $error = "Passwords do not match.";
+      } 
+      
+      // Check if username or email is already taken using the model
+      elseif ($userModel->isUserExisting($username, $email)) {
+          $error = "Username or Email is already registered.";
+      } 
+      
+      // Register the user if everything is OK using the model
+      else {
+        if ($userModel->registerUser($username, $email, $password)) {
+            // Redirect to login page with a success flag in the URL
+            header("Location: login.php?registered=true");
+            exit;
+        } else {
+            $error = "Something went wrong. Please try again.";
+        }
       }
   }
 
-  // Include header component (Ensure CSS is linked in header.php)
+  // Include header component
   include '../components/header.php'; 
 ?>
 
