@@ -11,6 +11,33 @@ class GameModel {
     }
 
     /**
+     * Search games by title
+     * @param string $query
+     * @return array
+     */
+    public function searchGames($query) {
+        try {
+            // Search games where title matches query
+            $sql = "SELECT * FROM games WHERE title LIKE :query";
+            $stmt = $this->pdo->prepare($sql);
+            $stmt->execute(['query' => '%' . $query . '%']);
+            $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Enrich each game with metadata
+            foreach ($games as &$game) {
+                $game['genres'] = $this->getGameGenres($game['id']);
+                $game['platforms'] = $this->getGamePlatforms($game['id']);
+                $game['rating_data'] = $this->getGameRating($game['id']);
+                $game['image_url'] = $this->getGameImage($game['id']);
+            }
+            return $games;
+        } catch (PDOException $e) {
+            error_log("Error searching games: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
      * Fetch all games from the database
      * @return array
      */
@@ -23,7 +50,6 @@ class GameModel {
             foreach ($games as &$game) {
                 $game['genres'] = $this->getGameGenres($game['id']);
                 $game['platforms'] = $this->getGamePlatforms($game['id']);
-                // Now returns array with 'avg' and 'count'
                 $game['rating_data'] = $this->getGameRating($game['id']);
                 $game['image_url'] = $this->getGameImage($game['id']);
             }
@@ -47,10 +73,8 @@ class GameModel {
             $game = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($game) {
-                // Enrich the game with genres, ratings and the cover image
                 $game['genres'] = $this->getGameGenres($game['id']);
                 $game['platforms'] = $this->getGamePlatforms($game['id']);
-                // Now returns array with 'avg' and 'count'
                 $game['rating_data'] = $this->getGameRating($game['id']);
                 $game['image_url'] = $this->getGameImage($game['id']);
                 $game['reviews'] = $this->getGameReviews($game['id']);
@@ -166,5 +190,4 @@ class GameModel {
             return false;
         }
     }
-
 }

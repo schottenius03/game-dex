@@ -12,9 +12,9 @@
 <section class="container">
     
     <div class="search-filter-section">
-        <form action="index.php" method="GET" class="search-form">
+        <form class="search-form">
             <div class="form-group" style="width: 100%;">
-                <input type="text" name="q" placeholder="Search games...">
+                <input type="text" id="searchBar" name="q" autocomplete="off" placeholder="Search games...">
             </div>
         </form>
 
@@ -36,7 +36,7 @@
 
     </div>
 
-    <div class="game-grid">
+    <div class="game-grid" id="gameGrid">
         <?php foreach ($games as $game): ?>
         <a href="game.php?id=<?php echo htmlspecialchars($game['id']); ?>" class="game-card">
             <div class="card-image">

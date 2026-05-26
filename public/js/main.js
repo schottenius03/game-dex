@@ -1,5 +1,44 @@
 $(document).ready(function() {
 
+    // Fetch games via AJAX based on search input
+    function fetchGames(query = '') {
+        $.ajax({
+            url: '/GameDex/public/search.php',
+            method: 'GET',
+            dataType: 'json',
+            data: { q: query },
+            success: function(data) {
+                const $grid = $('#gameGrid');
+                let html = '';
+
+                if (data.length === 0) {
+                    $grid.html('<p>No games found matching your search.</p>');
+                    return;
+                }
+
+                data.forEach(game => {
+                    const image = game.image_url || 'assets/game-controller.png';
+                    html += `
+                        <a href="game.php?id=${game.id}" class="game-card">
+                            <div class="card-image">
+                                <img src="${image}" alt="${game.title}">
+                            </div>
+                            <div class="card-content">
+                                <h3>${game.title}</h3>
+                            </div>
+                        </a>
+                    `;
+                });
+                $grid.html(html);
+            }
+        });
+    }
+
+    // Trigger search on input
+    $('#searchBar').on('input', function() {
+        fetchGames($(this).val());
+    });
+
     // Toggle password visibility
     $('.toggle-password').on('click', function() {
         const inputField = $(this).siblings('input');
