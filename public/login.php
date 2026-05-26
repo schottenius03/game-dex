@@ -13,8 +13,23 @@
       // Instantiate the UserModel
       $userModel = new UserModel();
 
-      // Attempt to log in using the model's method
+      // Verify credentials and start session
       if ($userModel->loginUser($username, $password)) {
+          
+          // Handle persistent login if remember me is checked
+          if ($remember) {
+              $rawToken = $userModel->createRememberToken($_SESSION['user_id']);
+              
+              // Set secure cookie for 30 days
+              setcookie('remember_me', $rawToken, [
+                  'expires' => time() + (86400 * 30),
+                  'path' => '/',
+                  'secure' => true,
+                  'httponly' => true,
+                  'samesite' => 'Strict'
+              ]);
+          }
+
           header("Location: profile.php");
           exit;
       } else {
@@ -74,6 +89,7 @@
 </main>
 
 <script>
+// Toggle visibility of password input
 function togglePasswordVisibility(fieldId, button) {
     const passwordField = document.getElementById(fieldId);
     if (passwordField.type === 'password') {

@@ -2,12 +2,20 @@
 require_once __DIR__ . '/../config/database.php';
 
 class UserModel {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct() {
         // Initialize the database connection via Singleton
         $db = DataBase::getInstance();
         $this->pdo = $db->getConnection();
+    }
+
+    /**
+     * Get the PDO database connection
+     * @return PDO
+     */
+    public function getPdo() {
+        return $this->pdo;
     }
 
     /**
@@ -83,6 +91,37 @@ class UserModel {
             error_log("Error during login: " . $e->getMessage());
             return false;
         }
+    }
+
+    /**
+     * Generate and save a remember-me token for the user
+     * @param int $userId
+     * @return string
+     */
+    public function createRememberToken($userId) {
+        $rawToken = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $rawToken);
+        $expiry = date('Y-m-d H:i:s', strtotime('+30 days'));
+
+        $stmt = $this->pdo->prepare("INSERT INTO user_tokens (user_id, token_hash, expires_at) VALUES (?, ?, ?)");
+        $stmt->execute([$userId, $tokenHash, $expiry]);
+
+        return $rawToken;
+    }
+
+    /**
+     * Validate a remember-me token and return the user ID
+     * @param string $rawToken
+     * @return int|false
+     */
+    public function validateRememberToken($rawToken) {
+        $tokenHash = hash('sha256', $rawToken);
+        
+        $stmt = $this->pdo->prepare("SELECT user_id FROM user_tokens WHERE token_hash = ? AND expires_at > NOW()");
+        $stmt->execute([$tokenHash]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result ? (int)$result['user_id'] : false;
     }
 
     /**
