@@ -33,7 +33,7 @@ $(document).ready(function() {
                             $(this).remove();
                             // If the list is empty, display a message
                             if ($('.game-grid .game-card').length === 0) {
-                                $('.container').append('<p>You haven\'t added any games to your favorites yet.</p>');
+                                $('.container').append('<p>You haven\'t added any games to your wishlist yet.</p>');
                             }
                         });
                     }

@@ -5,14 +5,13 @@ require_once __DIR__ . '/../models/WishlistModel.php';
 
 session_start();
 
-// Redirect to login if not logged in
-if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
-    exit;
-}
+$isLoggedIn = isset($_SESSION['user_id']);
+$favoriteGames = [];
 
-$wishlistModel = new WishlistModel();
-$favoriteGames = $wishlistModel->getUserWishlist($_SESSION['user_id']);
+if ($isLoggedIn) {
+    $wishlistModel = new WishlistModel();
+    $favoriteGames = $wishlistModel->getUserWishlist($_SESSION['user_id']);
+}
 
 include '../components/header.php';
 ?>
@@ -22,7 +21,11 @@ include '../components/header.php';
 <section class="container" id="wishlistContainer">
     <h2 class="page-title">My Favorites</h2>
 
-    <?php if (empty($favoriteGames)): ?>
+    <?php if (!$isLoggedIn): ?>
+        <div class="auth-message">
+            <p>You need to <a href="login.php">login</a> to save games to your wishlist.</p>
+        </div>
+    <?php elseif (empty($favoriteGames)): ?>
         <p id="emptyMessage">You haven't added any games to your favorites yet.</p>
     <?php else: ?>
         <div class="game-grid">
@@ -43,12 +46,12 @@ include '../components/header.php';
                         <div class="card-meta">
                             <p class="platform">
                                 <?php 
-                                $platformNames = array_map(function($p) { return $p['name']; }, $game['platforms']);
+                                $platformNames = array_map(function($p) { return $p['name']; }, $game['platforms'] ?? []);
                                 echo !empty($platformNames) ? htmlspecialchars(implode(', ', $platformNames)) : 'N/A';
                                 ?>
                             </p>
                             <span class="rating">
-                                <?php echo number_format((float)$game['rating_data']['avg'], 1); ?> 
+                                <?php echo isset($game['rating_data']['avg']) ? number_format((float)$game['rating_data']['avg'], 1) : '0.0'; ?> 
                             </span>
                         </div>
                     </div>
