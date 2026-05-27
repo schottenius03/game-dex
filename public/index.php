@@ -85,12 +85,15 @@
                     <h3><?php echo htmlspecialchars($game['title']); ?></h3>
                     
                     <div class="card-meta">
-                        <p class="platform">
-                            <?php 
-                            $platformNames = array_map(function($p) { return $p['name']; }, $game['platforms']);
-                            echo !empty($platformNames) ? htmlspecialchars(implode(', ', $platformNames)) : 'N/A';
-                            ?>
-                        </p>
+                        <div class="game-card-elements">
+                            <?php if (!empty($game['platforms'])): ?>
+                                <?php foreach ($game['platforms'] as $platform): ?>
+                                    <span class="badge badge-platform"><?php echo htmlspecialchars($platform['name']); ?></span>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <span class="badge badge-platform">N/A</span>
+                            <?php endif; ?>
+                        </div>
                         
                         <span class="rating">
                             <?php echo number_format((float)$game['rating_data']['avg'], 1); ?> 

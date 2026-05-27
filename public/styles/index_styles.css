@@ -141,3 +141,11 @@
 .wishlist-btn.active .wishlist-icon-filled {
     display: inline-block;
 }
+
+/* Badge container for alignment */
+.game-card-elements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 0.5rem;
+}

@@ -71,7 +71,14 @@
 
         <div class="game-meta-box">
             <div style="grid-column: span 4;">
-                <strong>Genre:</strong> <span><?php echo htmlspecialchars(implode(', ', array_map(function($g) { return $g['name']; }, $game['genres']))); ?></span>
+                <strong>Genre:</strong>
+                <?php if (!empty($game['genres'])): ?>
+                    <?php foreach ($game['genres'] as $genre): ?>
+                        <span class="badge badge-genre"><?php echo htmlspecialchars($genre['name']); ?></span>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <span>N/A</span>
+                <?php endif; ?>
             </div>
             <strong>Platform:</strong> <span><?php echo !empty($game['platforms']) ? htmlspecialchars(implode(', ', array_map(function($p) { return $p['name']; }, $game['platforms']))) : 'N/A'; ?></span>
             <strong>Developer:</strong> <span><?php echo htmlspecialchars($game['developer'] ?? 'N/A'); ?></span> 

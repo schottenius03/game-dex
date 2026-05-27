@@ -96,3 +96,22 @@ a {
     font-size: 0.85rem;
     border-top: 1px solid var(--border-color);
 }
+
+/* Bubbles */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: 1px solid var(--accent-orange);
+    background: transparent;
+    color: var(--accent-orange);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.badge-platform {
+    border-color: var(--accent-orange);
+    color: var(--accent-orange);
+}
