@@ -2,6 +2,8 @@
   require_once '../models/GameModel.php';
   require_once '../models/WishlistModel.php'; 
   
+  session_start();
+
   $gameModel = new GameModel();
   $wishlistModel = new WishlistModel(); 
   
@@ -96,7 +98,7 @@
                         </div>
                         
                         <span class="rating">
-                            <?php echo number_format((float)$game['rating_data']['avg'], 1); ?> 
+                            <?php echo isset($game['rating_data']['avg']) ? number_format((float)$game['rating_data']['avg'], 1) : '0.0'; ?> 
                         </span>
                     </div>
                 </div>
