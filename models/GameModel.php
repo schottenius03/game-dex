@@ -95,7 +95,7 @@ class GameModel {
      * @param int $game_id
      * @return array
      */
-    private function getGamePlatforms($game_id) {
+    public function getGamePlatforms($game_id) {
         $sql = "SELECT pl.name FROM platforms pl 
                 JOIN game_platforms gp ON pl.id = gp.platform_id 
                 WHERE gp.game_id = :id";
@@ -109,7 +109,7 @@ class GameModel {
      * @param int $game_id
      * @return array
      */
-    private function getGameRating($game_id) {
+    public function getGameRating($game_id) {
         $sql = "SELECT AVG(rating) as avg_rating, COUNT(*) as count 
                 FROM reviews 
                 WHERE game_id = :id";

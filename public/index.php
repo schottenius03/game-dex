@@ -23,7 +23,7 @@
 
             <div class="filter-group">
                 <div class="dropdown">
-                    <button class="dropbtn">Platform <span class="arrow">&#9663;</span></button>
+                    <button class="dropbtn" data-default="Platform">Platform <span class="arrow">&#9663;</span></button>
                     <div class="dropdown-content">
                         <a href="#" class="platform-filter" data-id="">All Platforms</a>
                         
@@ -37,7 +37,7 @@
             </div>
 
             <div class="dropdown">
-                <button class="dropbtn">Genre <span class="arrow">&#9663;</span></button>
+                <button class="dropbtn" data-default="Genre">Genre <span class="arrow">&#9663;</span></button>
                 <div class="dropdown-content">
                     <a href="#" class="genre-filter" data-id="">All Genres</a>
                     <?php foreach ($genres as $genre): ?>
@@ -47,6 +47,8 @@
                     <?php endforeach; ?>
                 </div>
             </div>
+
+            <button type="button" id="resetFilters" class="dropbtn reset-btn">Reset</button>
 
         </div>
 

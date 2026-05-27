@@ -48,7 +48,7 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Enrich each game with the image_url
+// Enrich each game with the image_url, platforms, and rating
 foreach ($games as &$game) {
     // Fetch the cover image for each game
     $sqlImg = "SELECT url FROM game_images WHERE game_id = :id AND type = 'cover' LIMIT 1";
@@ -57,6 +57,12 @@ foreach ($games as &$game) {
     $imgResult = $stmtImg->fetch(PDO::FETCH_ASSOC);
     
     $game['image_url'] = $imgResult ? $imgResult['url'] : null;
+
+    // Fetch platforms using the model
+    $game['platforms'] = $gameModel->getGamePlatforms($game['id']);
+    
+    // Fetch rating data using the model
+    $game['rating_data'] = $gameModel->getGameRating($game['id']);
 }
 
 // Return the result as JSON

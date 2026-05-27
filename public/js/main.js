@@ -5,6 +5,12 @@ $(document).ready(function() {
     let currentPlatformId = null;
     let currentGenreId = null;
 
+    // Update the visual state of the reset button based on active filters
+    function updateResetButton() {
+        const isFiltered = currentQuery !== '' || currentPlatformId !== null || currentGenreId !== null;
+        $('#resetFilters').toggleClass('active', isFiltered);
+    }
+
     // Fetch games via AJAX based on search input and filters
     function fetchGames() {
         $.ajax({
@@ -28,6 +34,10 @@ $(document).ready(function() {
 
                 data.forEach(game => {
                     const image = game.image_url || 'assets/game-controller.png';
+                    // Ensure rating and platforms are handled safely
+                    const rating = game.rating_data ? parseFloat(game.rating_data.avg).toFixed(1) : '0.0';
+                    const platforms = game.platforms && game.platforms.length > 0 ? game.platforms.map(p => p.name).join(', ') : 'N/A';
+                    
                     html += `
                         <a href="game.php?id=${game.id}" class="game-card">
                             <div class="card-image">
@@ -35,6 +45,10 @@ $(document).ready(function() {
                             </div>
                             <div class="card-content">
                                 <h3>${game.title}</h3>
+                                <div class="card-meta">
+                                    <p class="platform">${platforms}</p>
+                                    <span class="rating">${rating}</span>
+                                </div>
                             </div>
                         </a>
                     `;
@@ -47,6 +61,7 @@ $(document).ready(function() {
     // Trigger search on input
     $('#searchBar').on('input', function() {
         currentQuery = $(this).val();
+        updateResetButton();
         fetchGames();
     });
 
@@ -58,19 +73,42 @@ $(document).ready(function() {
         // Update button text to show selected platform
         $('.dropbtn').first().html($(this).text() + ' <span class="arrow">&#9663;</span>');
         
+        updateResetButton();
         fetchGames();
     });
 
     // Handle genre filter click
-        $('.genre-filter').on('click', function(e) {
-            e.preventDefault();
-            currentGenreId = $(this).data('id');
-            
-            // Update genre button text to show selected genre
-            $(this).closest('.dropdown').find('.dropbtn').html($(this).text() + ' <span class="arrow">&#9663;</span>');
-            
-            fetchGames();
+    $('.genre-filter').on('click', function(e) {
+        e.preventDefault();
+        currentGenreId = $(this).data('id');
+        
+        // Update genre button text to show selected genre
+        $(this).closest('.dropdown').find('.dropbtn').html($(this).text() + ' <span class="arrow">&#9663;</span>');
+        
+        updateResetButton();
+        fetchGames();
+    });
+
+    // Reset all filters and UI components
+    $('#resetFilters').on('click', function() {
+        if (!$(this).hasClass('active')) return;
+
+        currentQuery = '';
+        currentPlatformId = null;
+        currentGenreId = null;
+
+        // Clear search bar
+        $('#searchBar').val('');
+
+        // Reset dropdown buttons to their default text
+        $('.dropbtn').not('#resetFilters').each(function() {
+            const defaultText = $(this).data('default');
+            $(this).html(defaultText + ' <span class="arrow">&#9663;</span>');
         });
+
+        updateResetButton();
+        fetchGames();
+    });
 
     // Toggle password visibility
     $('.toggle-password').on('click', function() {

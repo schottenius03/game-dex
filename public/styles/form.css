@@ -366,3 +366,19 @@ p a:hover {
 .dropdown-content a:hover {
     background-color: var(--bg-dark);
 }
+
+/* Reset button */
+.reset-btn {
+    border: 1px solid var(--accent-orange);
+    color: var(--accent-orange);
+    background: transparent;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.reset-btn.active {
+    opacity: 1;
+    background-color: var(--accent-orange);
+    color: var(--bg-dark);
+    cursor: pointer;
+}
