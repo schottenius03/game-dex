@@ -98,3 +98,4 @@
 /* Hide filled heart by default and outline when active */
 .wishlist-btn .wishlist-icon-filled { display: none; }
 .wishlist-btn.active .wishlist-icon-outline { display: none; }
+

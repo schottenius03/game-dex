@@ -200,3 +200,21 @@ p a:hover { text-decoration: underline; }
     color: var(--bg-dark);
     cursor: pointer;
 }
+
+/* Average rating */
+.card-content .rating {
+    font-weight: bold;
+    color: var(--text-main); 
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    position: absolute; 
+    bottom: 1.5rem;
+    right: 1.5rem;
+}
+
+.card-content .rating::before {
+    content: "\2605";
+    color: var(--accent-orange);
+    font-size: 1.1rem;
+}

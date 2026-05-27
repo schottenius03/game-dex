@@ -1,10 +1,20 @@
 <?php 
   require_once '../models/GameModel.php';
+  require_once '../models/WishlistModel.php'; 
   
   $gameModel = new GameModel();
+  $wishlistModel = new WishlistModel(); 
+  
   $games = $gameModel->getAllGames(); 
   $platforms = $gameModel->getAllPlatforms();
   $genres = $gameModel->getAllGenres();
+  
+  // Get ID for logged in user
+  $wishlistIds = [];
+  if (isset($_SESSION['user_id'])) {
+      $wishlistIds = $wishlistModel->getUserWishlistIds($_SESSION['user_id']);
+  }
+  
   include '../components/header.php'; 
 ?>
 
@@ -51,13 +61,17 @@
             <button type="button" id="resetFilters" class="dropbtn reset-btn">Reset</button>
 
         </div>
-
     </div>
 
     <div class="game-grid" id="gameGrid">
         <?php foreach ($games as $game): ?>
+        <?php 
+            // Kontrollera om spelet finns i användarens önskelista
+            $isWishlisted = in_array($game['id'], $wishlistIds);
+            $activeClass = $isWishlisted ? 'active' : '';
+        ?>
         <div class="game-card">
-            <button class="wishlist-btn" onclick="this.classList.toggle('active')">
+            <button class="wishlist-btn <?php echo $activeClass; ?>" data-id="<?php echo htmlspecialchars($game['id']); ?>">
                 <span class="wishlist-icon-outline">♡</span>
                 <span class="wishlist-icon-filled">♥</span>
             </button>
@@ -87,6 +101,7 @@
         </div>
         <?php endforeach; ?>
     </div>
+
 </section>
 
 <?php include '../components/footer.php'; ?>

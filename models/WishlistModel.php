@@ -1,8 +1,8 @@
 <?php
 // models/WishlistModel.php
 
-// Ensure the configuration file exists before loading
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/GameModel.php';
 
 class WishlistModel {
     private PDO $pdo; 
@@ -12,10 +12,7 @@ class WishlistModel {
         $this->pdo = $db->getConnection();
     }
 
-    /**
-     * Toggles the wishlist status for a game.
-     * Returns 'added' if inserted, 'removed' if deleted.
-     */
+    // Toggles the wishlist record for a specific user and game
     public function toggleWishlist(int $userId, int $gameId): string {
         if ($this->isWishlisted($userId, $gameId)) {
             $stmt = $this->pdo->prepare("DELETE FROM wishlist WHERE user_id = ? AND game_id = ?");
@@ -28,18 +25,21 @@ class WishlistModel {
         }
     }
 
-    /**
-     * Checks if a game is already in the user's wishlist.
-     */
+    // Checks if a record exists for the given user and game
     public function isWishlisted(int $userId, int $gameId): bool {
         $stmt = $this->pdo->prepare("SELECT 1 FROM wishlist WHERE user_id = ? AND game_id = ?");
         $stmt->execute([$userId, $gameId]);
         return (bool)$stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Fetches all games associated with a user's wishlist.
-     */
+    // Fetches all game IDs associated with the user for quick UI checks
+    public function getUserWishlistIds(int $userId): array {
+        $stmt = $this->pdo->prepare("SELECT game_id FROM wishlist WHERE user_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    // Fetches full game data including platforms, rating and cover image for the wishlist page
     public function getUserWishlist(int $userId): array {
         $stmt = $this->pdo->prepare("
             SELECT g.* FROM games g 
@@ -49,13 +49,12 @@ class WishlistModel {
         $stmt->execute([$userId]);
         $games = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Ensure GameModel is loaded correctly
-        require_once __DIR__ . '/GameModel.php';
         $gameModel = new GameModel();
         
         foreach ($games as &$game) {
             $game['platforms'] = $gameModel->getGamePlatforms($game['id']);
             $game['rating_data'] = $gameModel->getGameRating($game['id']);
+            $game['image_url'] = $gameModel->getGameImage($game['id']);
         }
         
         return $games;

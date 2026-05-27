@@ -1,10 +1,11 @@
 <?php
+// wishlist.php
 
 require_once __DIR__ . '/../models/WishlistModel.php';
-require_once '../models/GameModel.php';
 
 session_start();
 
+// Redirect to login if not logged in
 if (!isset($_SESSION['user_id'])) {
     header('Location: login.php');
     exit;
@@ -18,11 +19,11 @@ include '../components/header.php';
 
 <link rel="stylesheet" href="styles/wishlist_styles.css">
 
-<section class="container">
+<section class="container" id="wishlistContainer">
     <h2 class="page-title">My Favorites</h2>
 
     <?php if (empty($favoriteGames)): ?>
-        <p>You haven't added any games to your favorites yet.</p>
+        <p id="emptyMessage">You haven't added any games to your favorites yet.</p>
     <?php else: ?>
         <div class="game-grid">
             <?php foreach ($favoriteGames as $game): ?>

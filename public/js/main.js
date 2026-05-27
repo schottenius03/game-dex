@@ -1,4 +1,3 @@
-/* Updated main.js with wishlist toggle functionality and existing features */
 $(document).ready(function() {
 
     // Global state for filters
@@ -26,8 +25,18 @@ $(document).ready(function() {
                 const res = typeof response === 'string' ? JSON.parse(response) : response;
                 
                 if (res.success) {
-                    // active tag
                     $btn.toggleClass('active'); 
+                    
+                    // Remove card
+                    if (window.location.pathname.includes('wishlist.php') && res.action === 'removed') {
+                        $btn.closest('.game-card').fadeOut(300, function() {
+                            $(this).remove();
+                            // If the list is empty, display a message
+                            if ($('.game-grid .game-card').length === 0) {
+                                $('.container').append('<p>You haven\'t added any games to your favorites yet.</p>');
+                            }
+                        });
+                    }
                 } else {
                     alert(res.message || 'You must be logged in to manage your wishlist!');
                 }

@@ -1,8 +1,10 @@
 <?php 
   require_once '../models/GameModel.php';
+  require_once '../models/WishlistModel.php';
   require_once __DIR__ . '/../includes/auth.php';
   
   $gameModel = new GameModel();
+  $wishlistModel = new WishlistModel();
   
   $id = $_GET['id'] ?? null; 
 
@@ -18,6 +20,13 @@
   }
 
   $game = $gameModel->getGameById($id);
+  
+  // Check if current user has wishlisted this game
+  $isWishlisted = false;
+  if (isset($_SESSION['user_id']) && $id) {
+      $isWishlisted = $wishlistModel->isWishlisted($_SESSION['user_id'], (int)$id);
+  }
+
   include '../components/header.php'; 
 ?>
 
@@ -39,7 +48,7 @@
             <img src="<?php echo htmlspecialchars($game['image_url'] ?? 'assets/game-controller.png'); ?>" 
                 alt="<?php echo htmlspecialchars($game['title']); ?>">
             
-            <button class="wishlist-btn" onclick="this.classList.toggle('active')">
+            <button class="wishlist-btn <?php echo $isWishlisted ? 'active' : ''; ?>" data-id="<?php echo htmlspecialchars($game['id']); ?>">
                 <span class="wishlist-icon-outline">♡</span>
                 <span class="wishlist-icon-filled">♥</span>
             </button>

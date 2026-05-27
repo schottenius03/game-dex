@@ -68,7 +68,7 @@ class GameModel {
      * @param int $game_id
      * @return string|null
      */
-    private function getGameImage($game_id) {
+    public function getGameImage($game_id) {
         $sql = "SELECT url FROM game_images WHERE game_id = :id AND type = 'cover' LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['id' => $game_id]);
