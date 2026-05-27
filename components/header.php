@@ -27,7 +27,7 @@ $accountUrl = isset($_SESSION['user_id']) ? 'profile.php' : 'login.php';
         </div>
         <nav class="nav-menu">
             <a href="index.php">Home</a>
-            <a href="#wishlist">Wishlist</a>
+            <a href="wishlist.php">Wishlist</a>
             <a href="<?php echo $accountUrl; ?>">Account</a>
         </nav>
     </div>

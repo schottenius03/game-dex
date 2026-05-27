@@ -56,29 +56,35 @@
 
     <div class="game-grid" id="gameGrid">
         <?php foreach ($games as $game): ?>
-        <a href="game.php?id=<?php echo htmlspecialchars($game['id']); ?>" class="game-card">
-            <div class="card-image">
-                <img src="<?php echo htmlspecialchars($game['image_url'] ?? 'assets/game-controller.png'); ?>" 
-                     alt="<?php echo htmlspecialchars($game['title']); ?>">
-            </div>
-            <div class="card-content">
-                <h3><?php echo htmlspecialchars($game['title']); ?></h3>
-                
-                <div class="card-meta">
-                    
-                    <p class="platform">
-                        <?php 
-                        $platformNames = array_map(function($p) { return $p['name']; }, $game['platforms']);
-                        echo !empty($platformNames) ? htmlspecialchars(implode(', ', $platformNames)) : 'N/A';
-                        ?>
-                    </p>
-                    
-                    <span class="rating">
-                        <?php echo number_format((float)$game['rating_data']['avg'], 1); ?> 
-                    </span>
+        <div class="game-card">
+            <button class="wishlist-btn" onclick="this.classList.toggle('active')">
+                <span class="wishlist-icon-outline">♡</span>
+                <span class="wishlist-icon-filled">♥</span>
+            </button>
+
+            <a href="game.php?id=<?php echo htmlspecialchars($game['id']); ?>" class="card-link">
+                <div class="card-image">
+                    <img src="<?php echo htmlspecialchars($game['image_url'] ?? 'assets/game-controller.png'); ?>" 
+                        alt="<?php echo htmlspecialchars($game['title']); ?>">
                 </div>
-            </div>
-        </a>
+                <div class="card-content">
+                    <h3><?php echo htmlspecialchars($game['title']); ?></h3>
+                    
+                    <div class="card-meta">
+                        <p class="platform">
+                            <?php 
+                            $platformNames = array_map(function($p) { return $p['name']; }, $game['platforms']);
+                            echo !empty($platformNames) ? htmlspecialchars(implode(', ', $platformNames)) : 'N/A';
+                            ?>
+                        </p>
+                        
+                        <span class="rating">
+                            <?php echo number_format((float)$game['rating_data']['avg'], 1); ?> 
+                        </span>
+                    </div>
+                </div>
+            </a>
+        </div>
         <?php endforeach; ?>
     </div>
 </section>

@@ -21,6 +21,12 @@
     width: 100%;
 }
 
+/* Set relative position to anchor the wishlist button */
+.game-cover {
+    position: relative;
+    width: 100%;
+}
+
 .game-cover img {
     width: 100%;
     aspect-ratio: 16 / 9; 
@@ -29,6 +35,41 @@
     box-shadow: 0 10px 20px rgba(0,0,0,0.3);
     display: block;
 }
+
+/* Position the wishlist button in the top right corner of the cover */
+.wishlist-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.4); 
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white; 
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.wishlist-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: scale(1.1);
+}
+
+/* Heart for active state */
+.wishlist-btn.active .wishlist-icon-filled { 
+    display: block; 
+    color: #e74c3c;
+}
+
+.wishlist-btn .wishlist-icon-filled { display: none; }
+.wishlist-btn.active .wishlist-icon-outline { display: none; }
 
 /* Main information column */
 .game-main-info {
@@ -175,4 +216,11 @@
     content: "\2605";
     color: var(--accent-orange);
     margin-right: 0.2rem;
+}
+
+/* Wrapper for title and wishlist button alignment */
+.title-and-wishlist {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
 }

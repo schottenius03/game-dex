@@ -59,6 +59,7 @@
     text-decoration: none; 
     height: 100%;
     position: relative; 
+    min-height: 340px; 
 }
 
 .card-image {
@@ -82,7 +83,7 @@
     display: flex; 
     flex-direction: column;
     flex-grow: 1; 
-    padding-bottom: 3rem; 
+    padding-bottom: 4.5rem; 
 }
 
 .card-content h3 {
@@ -119,4 +120,41 @@
     transform: translateY(-5px);
     border-color: var(--accent-orange); 
     box-shadow: 0 10px 20px rgba(211, 84, 0, 0.15); 
+}
+
+/* Wishlist button styling */
+.wishlist-btn {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 1.5rem;
+    background: transparent;
+    border: none;
+    font-size: 1.5rem; 
+    font-family: Arial, sans-serif; 
+    color: #e74c3c;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+    transition: transform 0.2s ease;
+    transform: scaleX(1.15); 
+    transform-origin: center;
+}
+
+.wishlist-btn:hover {
+    transform: scaleX(1.15) scale(1.2); 
+}
+
+/* Hide the filled heart by default so only the outline shows */
+.wishlist-btn .wishlist-icon-filled {
+    display: none;
+}
+
+/* When the button is active, hide the outline and show the filled version */
+.wishlist-btn.active .wishlist-icon-outline {
+    display: none;
+}
+
+.wishlist-btn.active .wishlist-icon-filled {
+    display: inline-block;
 }

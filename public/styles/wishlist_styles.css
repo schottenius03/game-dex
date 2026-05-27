@@ -1,0 +1,100 @@
+/* Container styling */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+.page-title {
+    color: var(--text-main);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Grid setup for game cards */
+.game-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+}
+
+/* Card container - relative positioning is required for the absolute button */
+.game-card {
+    position: relative;
+    background-color: var(--bg-surface);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Image styling */
+.card-image img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+}
+
+.card-content {
+    padding: 1.5rem;
+}
+
+.card-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.4rem;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+}
+
+/* Wishlist heart button styling (45px) */
+.wishlist-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.4);
+    border: none;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: white;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.wishlist-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: scale(1.1);
+}
+
+/* Active red heart state */
+.wishlist-btn.active .wishlist-icon-filled { 
+    display: block; 
+    color: #e74c3c; 
+}
+
+/* Hide filled heart by default and outline when active */
+.wishlist-btn .wishlist-icon-filled { display: none; }
+.wishlist-btn.active .wishlist-icon-outline { display: none; }

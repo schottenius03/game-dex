@@ -1,9 +1,43 @@
+/* Updated main.js with wishlist toggle functionality and existing features */
 $(document).ready(function() {
 
     // Global state for filters
     let currentQuery = '';
     let currentPlatformId = null;
     let currentGenreId = null;
+
+    // Toggle Wishlist functionality via AJAX
+    $(document).on('click', '.wishlist-btn', function(e) {
+        e.preventDefault();
+        const $btn = $(this);
+        const gameId = $btn.data('id');
+        // Check if the game is being added or removed from the wishlist
+        const isAdding = !$btn.hasClass('active'); 
+
+        $.ajax({
+            url: '/GameDex/public/wishlist_toggle.php',
+            method: 'POST',
+            data: { 
+                game_id: gameId,
+                action: isAdding ? 'add' : 'remove'
+            },
+            success: function(response) {
+                // Parse response if it comes as a string
+                const res = typeof response === 'string' ? JSON.parse(response) : response;
+                
+                if (res.success) {
+                    // active tag
+                    $btn.toggleClass('active'); 
+                } else {
+                    alert(res.message || 'You must be logged in to manage your wishlist!');
+                }
+            },
+            error: function() {
+                // Handle server or connectivity errors
+                alert('Something went wrong, please try again.');
+            }
+        });
+    });
 
     // Update the visual state of the reset button based on active filters
     function updateResetButton() {
@@ -27,30 +61,34 @@ $(document).ready(function() {
                 let html = '';
 
                 if (data.length === 0) {
-                    // Display no results message
                     $grid.html('<p class="no-results-text">No games found matching your criteria.</p>');
                     return;
                 }
 
                 data.forEach(game => {
                     const image = game.image_url || 'assets/game-controller.png';
-                    // Ensure rating and platforms are handled safely
                     const rating = game.rating_data ? parseFloat(game.rating_data.avg).toFixed(1) : '0.0';
                     const platforms = game.platforms && game.platforms.length > 0 ? game.platforms.map(p => p.name).join(', ') : 'N/A';
                     
                     html += `
-                        <a href="game.php?id=${game.id}" class="game-card">
-                            <div class="card-image">
-                                <img src="${image}" alt="${game.title}">
-                            </div>
-                            <div class="card-content">
-                                <h3>${game.title}</h3>
-                                <div class="card-meta">
-                                    <p class="platform">${platforms}</p>
-                                    <span class="rating">${rating}</span>
+                        <div class="game-card">
+                            <button class="wishlist-btn ${game.is_wishlisted ? 'active' : ''}" data-id="${game.id}">
+                                <span class="wishlist-icon-outline">♡</span>
+                                <span class="wishlist-icon-filled">♥</span>
+                            </button>
+                            <a href="game.php?id=${game.id}" class="card-link">
+                                <div class="card-image">
+                                    <img src="${image}" alt="${game.title}">
                                 </div>
-                            </div>
-                        </a>
+                                <div class="card-content">
+                                    <h3>${game.title}</h3>
+                                    <div class="card-meta">
+                                        <p class="platform">${platforms}</p>
+                                        <span class="rating">${rating}</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
                     `;
                 });
                 $grid.html(html);
@@ -69,10 +107,7 @@ $(document).ready(function() {
     $('.platform-filter').on('click', function(e) {
         e.preventDefault();
         currentPlatformId = $(this).data('id');
-        
-        // Update button text to show selected platform
         $('.dropbtn').first().html($(this).text() + ' <span class="arrow">&#9663;</span>');
-        
         updateResetButton();
         fetchGames();
     });
@@ -81,10 +116,7 @@ $(document).ready(function() {
     $('.genre-filter').on('click', function(e) {
         e.preventDefault();
         currentGenreId = $(this).data('id');
-        
-        // Update genre button text to show selected genre
         $(this).closest('.dropdown').find('.dropbtn').html($(this).text() + ' <span class="arrow">&#9663;</span>');
-        
         updateResetButton();
         fetchGames();
     });
@@ -92,20 +124,14 @@ $(document).ready(function() {
     // Reset all filters and UI components
     $('#resetFilters').on('click', function() {
         if (!$(this).hasClass('active')) return;
-
         currentQuery = '';
         currentPlatformId = null;
         currentGenreId = null;
-
-        // Clear search bar
         $('#searchBar').val('');
-
-        // Reset dropdown buttons to their default text
         $('.dropbtn').not('#resetFilters').each(function() {
             const defaultText = $(this).data('default');
             $(this).html(defaultText + ' <span class="arrow">&#9663;</span>');
         });
-
         updateResetButton();
         fetchGames();
     });
@@ -131,7 +157,6 @@ $(document).ready(function() {
     const $profileForm = $('#profileForm');
     if ($profileForm.length) {
         const $saveBtn = $('#saveBtn');
-
         function getFormState() {
             const state = {};
             $profileForm.find('input, select').each(function() {
@@ -139,7 +164,6 @@ $(document).ready(function() {
                 const type = $input.attr('type');
                 const name = $input.attr('name');
                 const val = $input.val();
-
                 if (type === 'checkbox') {
                     state[name + '_' + val] = $input.is(':checked');
                 } else if (type !== 'submit' && type !== 'hidden') {
@@ -148,9 +172,7 @@ $(document).ready(function() {
             });
             return JSON.stringify(state);
         }
-
         const initialState = getFormState();
-
         $profileForm.on('input change', function() {
             if (getFormState() !== initialState) {
                 $saveBtn.prop('disabled', false).css({
@@ -177,9 +199,7 @@ $(document).ready(function() {
         const $modalTitle = $('#modalTitle');
         const $btnContainer = $('#modalBtnContainer');
         const $hiddenDeleteForm = $('#hiddenDeleteForm');
-
         const closeModal = () => $modalOverlay.hide();
-
         $btnContainer.on('click', (e) => {
             const $target = $(e.target);
             if ($target.hasClass('btn-cancel-action')) {
@@ -194,7 +214,6 @@ $(document).ready(function() {
                 $hiddenDeleteForm.submit();
             }
         });
-
         $deleteTriggerBtn.on('click', () => {
             $modalTitle.text("Are you sure you want to delete your account?");
             $btnContainer.html(`
@@ -203,7 +222,6 @@ $(document).ready(function() {
             `);
             $modalOverlay.css('display', 'flex');
         });
-
         $modalOverlay.on('click', (e) => {
             if (e.target === $modalOverlay[0]) closeModal();
         });

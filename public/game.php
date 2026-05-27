@@ -37,32 +37,33 @@
     <div class="game-sidebar">
         <div class="game-cover">
             <img src="<?php echo htmlspecialchars($game['image_url'] ?? 'assets/game-controller.png'); ?>" 
-                 alt="<?php echo htmlspecialchars($game['title']); ?>">
+                alt="<?php echo htmlspecialchars($game['title']); ?>">
+            
+            <button class="wishlist-btn" onclick="this.classList.toggle('active')">
+                <span class="wishlist-icon-outline">♡</span>
+                <span class="wishlist-icon-filled">♥</span>
+            </button>
         </div>
     </div>
 
-    <!-- Title and rating !-->
     <div class="game-main-info">
         <div class="title-container">
             <h1 class="game-title"><?php echo htmlspecialchars($game['title']); ?></h1>
             <span class="header-rating">
-                &#9733; <?php echo number_format($game['rating_data']['avg'], 1); ?> 
+                <?php echo number_format($game['rating_data']['avg'], 1); ?> 
                 (<?php echo $game['rating_data']['count']; ?>)
             </span>
         </div>
         
         <div class="game-description">
             <h2>About the Game</h2>
-            <p>
-                <?php echo nl2br(htmlspecialchars($game['synopsis'])); ?>
-            </p>
+            <p><?php echo nl2br(htmlspecialchars($game['synopsis'])); ?></p>
         </div>
 
         <div class="game-meta-box">
             <div style="grid-column: span 4;">
                 <strong>Genre:</strong> <span><?php echo htmlspecialchars(implode(', ', array_map(function($g) { return $g['name']; }, $game['genres']))); ?></span>
             </div>
-
             <strong>Platform:</strong> <span><?php echo !empty($game['platforms']) ? htmlspecialchars(implode(', ', array_map(function($p) { return $p['name']; }, $game['platforms']))) : 'N/A'; ?></span>
             <strong>Developer:</strong> <span><?php echo htmlspecialchars($game['developer'] ?? 'N/A'); ?></span> 
             <strong>Release date:</strong> <span>
@@ -105,17 +106,17 @@
 
         <div class="form-box">
             <?php if (isset($_SESSION['user_id'])): ?>
-                <form action="game.php?id=<?php echo $id; ?>" method="POST">
+                <form action="game.php?id=<?php echo htmlspecialchars($id); ?>" method="POST">
                     <h3>Leave a review</h3>
                     
                     <div class="form-group">
                         <label for="rating">Rating</label>
                         <select id="rating" name="rating" required>
-                            <option value="5">&#9733; 5 - Excellent</option>
-                            <option value="4">&#9733; 4 - Very Good</option>
-                            <option value="3">&#9733; 3 - Average</option>
-                            <option value="2">&#9733; 2 - Poor</option>
-                            <option value="1">&#9733; 1 - Terrible</option>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Poor</option>
+                            <option value="1">1 - Terrible</option>
                         </select>
                     </div>
 
