@@ -175,7 +175,7 @@ $(document).ready(function() {
 
     // Toggle dropdown on click
     $('.dropbtn').on('click', function(e) {
-        e.stopPropagation(); // Förhindrar att klicket stänger menyn direkt
+        e.stopPropagation(); // Prevent drop down to close down
         $(this).siblings('.dropdown-content').toggleClass('show');
     });
 

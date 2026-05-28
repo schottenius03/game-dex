@@ -14,14 +14,16 @@
       // Instantiate the UserModel
       $userModel = new UserModel();
 
-      // Verify credentials using the identifier and start session
-      if ($userModel->loginUser($identifier, $password)) {
+      // Verify credentials using the identifier and capture result
+      $loginResult = $userModel->loginUser($identifier, $password);
+
+      // If login is successful (returns true)
+      if ($loginResult === true) {
           
           // Handle persistent login if remember me is checked
           if ($remember) {
               $rawToken = $userModel->createRememberToken($_SESSION['user_id']);
               
-              // Set secure cookie for 30 days
               setcookie('remember_me', $rawToken, [
                   'expires' => time() + (86400 * 30),
                   'path' => '/',
@@ -34,7 +36,8 @@
           header("Location: profile.php");
           exit;
       } else {
-          $error = "Invalid username/email or password.";
+          // If login fails, capture the error message returned by UserModel
+          $error = $loginResult;
       }
   }
 

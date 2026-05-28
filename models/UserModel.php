@@ -64,45 +64,49 @@ class UserModel {
         }
     }
 
-/**
+    /**
      * Handle user login and session initialization (Supports Username or Email)
      * @param string $identifier
      * @param string $password
-     * @return bool
+     * @return bool|string Returns true on success, or an error message string on failure
      */
     public function loginUser($identifier, $password) {
-    try {
-        // Use two unique parameters to avoid PDO conflicts
-        $sql = "SELECT id, username, password_hash FROM users WHERE username = :username OR email = :email";
-        $stmt = $this->pdo->prepare($sql);
-        
-        // Pass the identifier into both placeholders
-        $stmt->execute([
-            'username' => $identifier,
-            'email'    => $identifier
-        ]);
-        
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        try {
+            // Use two unique parameters to avoid PDO conflicts
+            $sql = "SELECT id, username, password_hash FROM users WHERE username = :username OR email = :email";
+            $stmt = $this->pdo->prepare($sql);
+            
+            $stmt->execute([
+                'username' => $identifier,
+                'email'    => $identifier
+            ]);
+            
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$user) {
-            die("DEBUG: Could not find user with identifier: " . htmlspecialchars($identifier));
-        }
-
-        if (password_verify($password, $user['password_hash'])) {
-            if (session_status() === PHP_SESSION_NONE) {
-                session_start();
+            // If no user is found, return an error message
+            if (!$user) {
+                return "Invalid username/email or password.";
             }
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            return true;
-        } else {
-            die("DEBUG: User found, but password does not match!");
-        }
 
-    } catch (PDOException $e) {
-        die("DEBUG: Database error: " . $e->getMessage());
+            // Verify password
+            if (password_verify($password, $user['password_hash'])) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                }
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['username'] = $user['username'];
+                return true;
+            } else {
+                // Password does not match
+                return "Invalid username/email or password.";
+            }
+
+        } catch (PDOException $e) {
+            // Log error and return a generic user-friendly message
+            error_log("Login error: " . $e->getMessage());
+            return "An internal error occurred. Please try again later.";
+        }
     }
-}
 
     /**
      * Generate and save a remember-me token for the user
