@@ -1,20 +1,21 @@
 <?php
   // Include global session handling
   require_once __DIR__ . '/../includes/auth.php';
-  // Include the new UserModel class
+  // Include the user model class
   require_once __DIR__ . '/../models/UserModel.php';
 
   // Process login form
   if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-      $username = trim($_POST['username']);
+      // Use identifier to support both username and email login
+      $identifier = trim($_POST['username']);
       $password = $_POST['password'];
       $remember = isset($_POST['remember']); 
       
       // Instantiate the UserModel
       $userModel = new UserModel();
 
-      // Verify credentials and start session
-      if ($userModel->loginUser($username, $password)) {
+      // Verify credentials using the identifier and start session
+      if ($userModel->loginUser($identifier, $password)) {
           
           // Handle persistent login if remember me is checked
           if ($remember) {
@@ -33,7 +34,7 @@
           header("Location: profile.php");
           exit;
       } else {
-          $error = "Invalid username or password.";
+          $error = "Invalid username/email or password.";
       }
   }
 
@@ -61,7 +62,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="username">Username</label>
+                    <label for="username">Username or Email</label>
                     <input type="text" id="username" name="username" autocomplete="username" required>
                 </div>
 

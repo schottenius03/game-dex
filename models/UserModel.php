@@ -64,34 +64,45 @@ class UserModel {
         }
     }
 
-    /**
-     * Handle user login and session initialization
-     * @param string $username
+/**
+     * Handle user login and session initialization (Supports Username or Email)
+     * @param string $identifier
      * @param string $password
      * @return bool
      */
-    public function loginUser($username, $password) {
-        try {
-            $stmt = $this->pdo->prepare("SELECT id, username, password_hash FROM users WHERE username = :username");
-            $stmt->execute(['username' => $username]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    public function loginUser($identifier, $password) {
+    try {
+        // Use two unique parameters to avoid PDO conflicts
+        $sql = "SELECT id, username, password_hash FROM users WHERE username = :username OR email = :email";
+        $stmt = $this->pdo->prepare($sql);
+        
+        // Pass the identifier into both placeholders
+        $stmt->execute([
+            'username' => $identifier,
+            'email'    => $identifier
+        ]);
+        
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            // Verify the provided password against the stored hash
-            if ($user && password_verify($password, $user['password_hash'])) {
-                // Ensure session is started
-                if (session_status() === PHP_SESSION_NONE) {
-                    session_start();
-                }
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['username'] = $user['username'];
-                return true;
-            }
-            return false;
-        } catch (PDOException $e) {
-            error_log("Error during login: " . $e->getMessage());
-            return false;
+        if (!$user) {
+            die("DEBUG: Could not find user with identifier: " . htmlspecialchars($identifier));
         }
+
+        if (password_verify($password, $user['password_hash'])) {
+            if (session_status() === PHP_SESSION_NONE) {
+                session_start();
+            }
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            return true;
+        } else {
+            die("DEBUG: User found, but password does not match!");
+        }
+
+    } catch (PDOException $e) {
+        die("DEBUG: Database error: " . $e->getMessage());
     }
+}
 
     /**
      * Generate and save a remember-me token for the user
