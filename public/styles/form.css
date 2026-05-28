@@ -174,7 +174,7 @@ p a:hover { text-decoration: underline; }
     padding: 5px 0;
 }
 
-.dropdown:hover .dropdown-content { display: block; }
+.dropdown-content.show { display: block; }
 
 .dropdown-content a {
     display: block;

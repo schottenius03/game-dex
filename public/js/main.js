@@ -77,7 +77,16 @@ $(document).ready(function() {
                 data.forEach(game => {
                     const image = game.image_url || 'assets/game-controller.png';
                     const rating = game.rating_data ? parseFloat(game.rating_data.avg).toFixed(1) : '0.0';
-                    const platforms = game.platforms && game.platforms.length > 0 ? game.platforms.map(p => p.name).join(', ') : 'N/A';
+                    
+                    // Build platform badges
+                    let platformBadges = '';
+                    if (game.platforms && game.platforms.length > 0) {
+                        game.platforms.forEach(p => {
+                            platformBadges += `<span class="badge badge-platform">${p.name}</span>`;
+                        });
+                    } else {
+                        platformBadges = '<span class="badge badge-platform">N/A</span>';
+                    }
                     
                     html += `
                         <div class="game-card">
@@ -92,7 +101,9 @@ $(document).ready(function() {
                                 <div class="card-content">
                                     <h3>${game.title}</h3>
                                     <div class="card-meta">
-                                        <p class="platform">${platforms}</p>
+                                        <div class="game-card-elements">
+                                            ${platformBadges}
+                                        </div>
                                         <span class="rating">${rating}</span>
                                     </div>
                                 </div>
@@ -160,6 +171,17 @@ $(document).ready(function() {
             btn.text('Saving...');
             btn.css('opacity', '0.7');
         }
+    });
+
+    // Toggle dropdown on click
+    $('.dropbtn').on('click', function(e) {
+        e.stopPropagation(); // Förhindrar att klicket stänger menyn direkt
+        $(this).siblings('.dropdown-content').toggleClass('show');
+    });
+
+    // CLose dropdown alternatives if click somewhere else 
+    $(window).on('click', function() {
+        $('.dropdown-content').removeClass('show');
     });
 
     // Profile form change detection
